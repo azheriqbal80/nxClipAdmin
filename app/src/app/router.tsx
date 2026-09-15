@@ -13,6 +13,8 @@ import { HealthPage } from '@/features/health'
 import { PlansPage, CoachPage } from '@/features/config'
 import { SettingsPage } from '@/features/settings'
 
+const basepath = import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '')
+
 const rootRoute = createRootRoute({ component: () => <Outlet /> })
 
 /** Public route (no shell). */
@@ -106,6 +108,7 @@ const routeTree = rootRoute.addChildren([
 
 export const router = createRouter({
   routeTree,
+  basepath,
   defaultPreload: 'intent',
   scrollRestoration: true,
 })

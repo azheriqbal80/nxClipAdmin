@@ -10,6 +10,7 @@ const GATEWAY = 'https://api-gateway-216098834386.us-central1.run.app'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: process.env.GITHUB_PAGES === 'true' ? '/nxClipAdmin/' : '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
