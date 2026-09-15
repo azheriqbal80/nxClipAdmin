@@ -1,0 +1,1394 @@
+{
+  "sourceFiles": 145,
+  "tsxFiles": 81,
+  "pages": [
+    {
+      "file": "features/auth/pages/login-page.tsx",
+      "featureFiles": [
+        "features/auth/pages/login-page.tsx"
+      ],
+      "shared": [
+        "components/logo.tsx",
+        "components/panel.tsx",
+        "components/ui/button.tsx",
+        "components/ui/input.tsx"
+      ],
+      "tags": {
+        "Navigate": 1,
+        "div": 6,
+        "Logo": 1,
+        "Panel": 1,
+        "h1": 1,
+        "p": 2,
+        "form": 1,
+        "label": 2,
+        "Input": 2,
+        "AlertTriangle": 1,
+        "Button": 1,
+        "Loader2": 1
+      }
+    },
+    {
+      "file": "features/config/pages/coach-page.tsx",
+      "featureFiles": [
+        "features/config/pages/coach-page.tsx",
+        "features/config/components/category-editor.tsx",
+        "features/config/components/new-category-dialog.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/panel.tsx",
+        "components/ui/button.tsx",
+        "components/ui/skeleton.tsx",
+        "components/status-pill.tsx",
+        "components/ui/badge.tsx",
+        "components/data-table.tsx",
+        "components/ui/table.tsx",
+        "components/ui/input.tsx",
+        "components/ui/switch.tsx",
+        "components/empty-state.tsx",
+        "components/ui/dialog.tsx"
+      ],
+      "tags": {
+        "span": 39,
+        "Button": 14,
+        "ChevronUp": 1,
+        "ChevronDown": 1,
+        "TonePill": 3,
+        "div": 21,
+        "PageHeader": 1,
+        "Save": 3,
+        "ArrowUpDown": 1,
+        "NewCategoryDialog": 1,
+        "p": 2,
+        "Panel": 3,
+        "PanelHeader": 1,
+        "Skeleton": 1,
+        "DataTable": 1,
+        "CategoryEditor": 1,
+        "EmptyState": 1,
+        "GraduationCap": 1,
+        "Badge": 2,
+        "X": 1,
+        "label": 14,
+        "Input": 10,
+        "textarea": 2,
+        "Switch": 5,
+        "ul": 1,
+        "li": 1,
+        "Plus": 2,
+        "Dialog": 1,
+        "DialogTrigger": 1,
+        "DialogContent": 1,
+        "DialogHeader": 1,
+        "DialogTitle": 1,
+        "DialogDescription": 1,
+        "DialogFooter": 1
+      }
+    },
+    {
+      "file": "features/config/pages/plans-page.tsx",
+      "featureFiles": [
+        "features/config/pages/plans-page.tsx",
+        "features/config/components/plan-editor.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/panel.tsx",
+        "components/ui/badge.tsx",
+        "components/ui/skeleton.tsx",
+        "components/data-table.tsx",
+        "components/ui/table.tsx",
+        "components/ui/button.tsx",
+        "components/ui/input.tsx",
+        "components/ui/switch.tsx",
+        "components/empty-state.tsx"
+      ],
+      "tags": {
+        "Badge": 3,
+        "span": 8,
+        "div": 9,
+        "PageHeader": 1,
+        "Panel": 3,
+        "PanelHeader": 1,
+        "Skeleton": 1,
+        "DataTable": 1,
+        "PlanEditor": 1,
+        "EmptyState": 1,
+        "SlidersHorizontal": 1,
+        "Button": 2,
+        "X": 1,
+        "label": 2,
+        "Input": 1,
+        "Switch": 1,
+        "p": 1,
+        "Save": 1
+      }
+    },
+    {
+      "file": "features/creators/pages/creators-page.tsx",
+      "featureFiles": [
+        "features/creators/pages/creators-page.tsx",
+        "features/creators/components/creator-inspector.tsx",
+        "features/creators/components/plan-headroom.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/ui/button.tsx",
+        "components/ui/badge.tsx",
+        "components/status-pill.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/data-grid.tsx",
+        "components/ui/table.tsx",
+        "components/ui/checkbox.tsx",
+        "components/ui/skeleton.tsx",
+        "components/search-input.tsx",
+        "components/ui/input.tsx",
+        "components/data-grid-faceted-filter.tsx",
+        "components/ui/separator.tsx",
+        "components/ui/dropdown-menu.tsx",
+        "components/panel.tsx",
+        "components/field.tsx",
+        "components/empty-state.tsx"
+      ],
+      "tags": {
+        "div": 25,
+        "UserAvatar": 3,
+        "span": 12,
+        "Badge": 4,
+        "TonePill": 2,
+        "PageHeader": 1,
+        "PlanHeadroom": 1,
+        "DataGrid": 1,
+        "Button": 5,
+        "Ban": 2,
+        "CreatorInspector": 1,
+        "Panel": 3,
+        "EmptyState": 1,
+        "UserRound": 1,
+        "X": 1,
+        "Field": 7,
+        "BadgeCheck": 1,
+        "CheckCircle2": 2,
+        "RotateCcw": 1,
+        "ShieldPlus": 1,
+        "PanelHeader": 1,
+        "Skeleton": 1,
+        "Gauge": 1,
+        "ul": 1,
+        "li": 1,
+        "p": 1
+      }
+    },
+    {
+      "file": "features/design-system/pages/design-system-page.tsx",
+      "featureFiles": [
+        "features/design-system/pages/design-system-page.tsx"
+      ],
+      "shared": [
+        "components/logo.tsx",
+        "components/page-header.tsx",
+        "components/panel.tsx",
+        "components/ui/button.tsx",
+        "components/ui/badge.tsx",
+        "components/ui/input.tsx",
+        "components/ui/skeleton.tsx",
+        "components/ui/switch.tsx",
+        "components/ui/tabs.tsx",
+        "components/search-input.tsx",
+        "components/status-pill.tsx",
+        "components/stat-card.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/data-table.tsx",
+        "components/ui/table.tsx",
+        "components/field.tsx",
+        "components/metric.tsx",
+        "components/empty-state.tsx",
+        "components/ui/dropdown-menu.tsx"
+      ],
+      "tags": {
+        "section": 1,
+        "div": 118,
+        "h2": 2,
+        "p": 18,
+        "span": 28,
+        "Panel": 25,
+        "Button": 20,
+        "a": 1,
+        "h3": 4,
+        "UserAvatar": 4,
+        "PriorityPill": 6,
+        "StatusPill": 6,
+        "MoreHorizontal": 2,
+        "PageHeader": 1,
+        "JumpNav": 1,
+        "Section": 19,
+        "Logo": 2,
+        "img": 2,
+        "Badge": 15,
+        "BrandRoleCard": 3,
+        "Swatch": 40,
+        "Input": 2,
+        "RadiusSpecimen": 6,
+        "ImageIcon": 2,
+        "Sidebar": 1,
+        "Topbar": 1,
+        "PanelHeader": 4,
+        "DataTable": 4,
+        "Plus": 2,
+        "Metric": 6,
+        "Field": 13,
+        "ListTree": 2,
+        "StateTile": 6,
+        "SearchInput": 3,
+        "PanelRightOpen": 2,
+        "Switch": 1,
+        "label": 1,
+        "Tabs": 1,
+        "TabsList": 1,
+        "TabsTrigger": 3,
+        "Skeleton": 8,
+        "EmptyState": 2,
+        "Inbox": 2,
+        "TriangleAlert": 1,
+        "StatCard": 4,
+        "Users": 1,
+        "Coins": 1,
+        "Heart": 1,
+        "CheckCircle2": 1,
+        "ResponsiveRule": 3,
+        "Monitor": 1,
+        "Smartphone": 1
+      }
+    },
+    {
+      "file": "features/drafts/pages/drafts-page.tsx",
+      "featureFiles": [
+        "features/drafts/pages/drafts-page.tsx",
+        "features/drafts/components/draft-inspector.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/ui/tabs.tsx",
+        "components/status-pill.tsx",
+        "components/ui/badge.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/data-grid.tsx",
+        "components/ui/table.tsx",
+        "components/ui/button.tsx",
+        "components/ui/checkbox.tsx",
+        "components/ui/skeleton.tsx",
+        "components/search-input.tsx",
+        "components/ui/input.tsx",
+        "components/data-grid-faceted-filter.tsx",
+        "components/ui/separator.tsx",
+        "components/ui/dropdown-menu.tsx",
+        "components/panel.tsx",
+        "components/field.tsx",
+        "components/empty-state.tsx"
+      ],
+      "tags": {
+        "div": 19,
+        "UserAvatar": 2,
+        "span": 19,
+        "StatusPill": 1,
+        "TonePill": 2,
+        "PageHeader": 1,
+        "p": 4,
+        "Tabs": 1,
+        "TabsList": 1,
+        "TabsTrigger": 1,
+        "DataGrid": 1,
+        "DraftInspector": 1,
+        "Panel": 2,
+        "EmptyState": 1,
+        "FileText": 1,
+        "Button": 1,
+        "X": 1,
+        "code": 1,
+        "Field": 9
+      }
+    },
+    {
+      "file": "features/explore/pages/explore-page.tsx",
+      "featureFiles": [
+        "features/explore/pages/explore-page.tsx",
+        "features/explore/components/projection-inspector.tsx",
+        "features/explore/components/wes-scatter-chart.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/ui/skeleton.tsx",
+        "components/stat-card.tsx",
+        "components/panel.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/data-grid.tsx",
+        "components/ui/table.tsx",
+        "components/ui/button.tsx",
+        "components/ui/checkbox.tsx",
+        "components/search-input.tsx",
+        "components/ui/input.tsx",
+        "components/data-grid-faceted-filter.tsx",
+        "components/ui/badge.tsx",
+        "components/ui/separator.tsx",
+        "components/ui/dropdown-menu.tsx",
+        "components/empty-state.tsx",
+        "components/field.tsx",
+        "components/status-pill.tsx",
+        "components/metric.tsx",
+        "components/chart-frame.tsx",
+        "components/chart-theme.ts"
+      ],
+      "tags": {
+        "div": 29,
+        "UserAvatar": 2,
+        "span": 15,
+        "PageHeader": 1,
+        "Skeleton": 2,
+        "StatCard": 3,
+        "Compass": 2,
+        "TrendingUp": 1,
+        "Globe": 2,
+        "WesScatterChart": 1,
+        "DataGrid": 1,
+        "ProjectionInspector": 1,
+        "Panel": 3,
+        "EmptyState": 1,
+        "Metric": 3,
+        "Button": 1,
+        "X": 1,
+        "Badge": 2,
+        "Heart": 1,
+        "MessageCircle": 1,
+        "Field": 3,
+        "TonePill": 1,
+        "PanelHeader": 1,
+        "ChartFrame": 1,
+        "ScatterChart": 1,
+        "CartesianGrid": 1,
+        "XAxis": 1,
+        "YAxis": 1,
+        "ZAxis": 1,
+        "Tooltip": 1,
+        "PointTooltip": 1,
+        "Scatter": 1
+      }
+    },
+    {
+      "file": "features/health/pages/health-page.tsx",
+      "featureFiles": [
+        "features/health/pages/health-page.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/panel.tsx",
+        "components/ui/button.tsx",
+        "components/ui/skeleton.tsx",
+        "components/status-pill.tsx",
+        "components/ui/badge.tsx"
+      ],
+      "tags": {
+        "div": 15,
+        "span": 5,
+        "TonePill": 2,
+        "PageHeader": 1,
+        "Button": 1,
+        "RefreshCw": 1,
+        "Panel": 2,
+        "Activity": 1,
+        "Skeleton": 1,
+        "ServiceCard": 1
+      }
+    },
+    {
+      "file": "features/moderation/pages/moderation-page.tsx",
+      "featureFiles": [
+        "features/moderation/pages/moderation-page.tsx",
+        "features/moderation/components/moderation-inspector.tsx",
+        "features/moderation/components/content-volume-chart.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/ui/tabs.tsx",
+        "components/status-pill.tsx",
+        "components/ui/badge.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/data-grid.tsx",
+        "components/ui/table.tsx",
+        "components/ui/button.tsx",
+        "components/ui/checkbox.tsx",
+        "components/ui/skeleton.tsx",
+        "components/search-input.tsx",
+        "components/ui/input.tsx",
+        "components/data-grid-faceted-filter.tsx",
+        "components/ui/separator.tsx",
+        "components/ui/dropdown-menu.tsx",
+        "components/panel.tsx",
+        "components/field.tsx",
+        "components/empty-state.tsx",
+        "components/chart-frame.tsx",
+        "components/chart-theme.ts",
+        "components/chart-tooltip.tsx"
+      ],
+      "tags": {
+        "div": 25,
+        "UserAvatar": 2,
+        "span": 10,
+        "StatusPill": 2,
+        "PageHeader": 1,
+        "ContentVolumeChart": 1,
+        "Tabs": 1,
+        "TabsList": 1,
+        "TabsTrigger": 1,
+        "DataGrid": 1,
+        "ModerationInspector": 1,
+        "Panel": 3,
+        "EmptyState": 1,
+        "ImageIcon": 1,
+        "Button": 3,
+        "X": 1,
+        "Loader2": 1,
+        "video": 1,
+        "img": 1,
+        "Icon": 1,
+        "Badge": 1,
+        "Field": 4,
+        "AlertTriangle": 1,
+        "Check": 1,
+        "Trash2": 1,
+        "PanelHeader": 1,
+        "Skeleton": 1,
+        "ChartFrame": 1,
+        "BarChart": 1,
+        "CartesianGrid": 1,
+        "XAxis": 1,
+        "YAxis": 1,
+        "Tooltip": 1,
+        "ChartTooltip": 1,
+        "Legend": 1,
+        "Bar": 1
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "featureFiles": [
+        "features/overview/pages/overview-page.tsx",
+        "features/overview/components/dashboard-sections.tsx",
+        "features/overview/components/overview-health.tsx"
+      ],
+      "shared": [
+        "components/ui/sheet.tsx",
+        "components/ui/button.tsx",
+        "components/page-header.tsx",
+        "components/search-input.tsx",
+        "components/ui/input.tsx",
+        "components/ui/table.tsx",
+        "components/status-pill.tsx",
+        "components/ui/badge.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/panel.tsx"
+      ],
+      "tags": {
+        "div": 66,
+        "PageHeader": 1,
+        "Button": 5,
+        "RefreshCw": 3,
+        "Download": 2,
+        "nav": 1,
+        "a": 1,
+        "span": 45,
+        "CalendarDays": 1,
+        "TriangleAlert": 3,
+        "section": 6,
+        "OperationalMetric": 4,
+        "ShieldCheck": 1,
+        "Zap": 1,
+        "Wallet": 1,
+        "ArrowDownRight": 2,
+        "ArrowUpRight": 9,
+        "Clock3": 1,
+        "p": 14,
+        "strong": 20,
+        "Link": 7,
+        "ArrowRight": 1,
+        "Panel": 6,
+        "SearchInput": 1,
+        "X": 2,
+        "kbd": 1,
+        "button": 11,
+        "DataPlaceholder": 7,
+        "Table": 1,
+        "caption": 1,
+        "TableHeader": 1,
+        "TableRow": 3,
+        "TableHead": 6,
+        "input": 2,
+        "TableBody": 1,
+        "TableCell": 7,
+        "Clapperboard": 1,
+        "FileImage": 1,
+        "small": 5,
+        "UserAvatar": 2,
+        "StatusPill": 2,
+        "ChevronRight": 2,
+        "Search": 1,
+        "aside": 1,
+        "QuickLinks": 1,
+        "OverviewHealth": 1,
+        "UsersAndPlans": 1,
+        "GrowthCharts": 1,
+        "Check": 1,
+        "Sheet": 2,
+        "SheetContent": 2,
+        "SheetHeader": 2,
+        "SheetTitle": 2,
+        "SheetDescription": 2,
+        "h2": 8,
+        "dl": 2,
+        "dt": 8,
+        "dd": 8,
+        "LoaderCircle": 1,
+        "CheckCircle2": 1,
+        "i": 5,
+        "SignupDelta": 2,
+        "Users": 1,
+        "ResponsiveContainer": 3,
+        "PieChart": 1,
+        "Pie": 1,
+        "Cell": 2,
+        "b": 4,
+        "label": 1,
+        "select": 1,
+        "option": 3,
+        "ChevronDown": 1,
+        "BarChart": 2,
+        "CartesianGrid": 2,
+        "XAxis": 2,
+        "YAxis": 2,
+        "Tooltip": 2,
+        "SignupTooltip": 2,
+        "Bar": 4,
+        "Info": 2,
+        "ReferenceLine": 1,
+        "module.icon": 1,
+        "Gauge": 1,
+        "details": 1,
+        "summary": 1
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "featureFiles": [
+        "features/overview-example/pages/overview-example-page.tsx",
+        "features/overview-example/components/overview-sections.tsx",
+        "features/overview/components/dashboard-sections.tsx"
+      ],
+      "shared": [
+        "components/ui/sheet.tsx",
+        "components/ui/button.tsx",
+        "components/logo.tsx",
+        "components/ui/badge.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/ui/dropdown-menu.tsx",
+        "components/search-input.tsx",
+        "components/ui/input.tsx",
+        "components/ui/table.tsx",
+        "components/status-pill.tsx",
+        "components/panel.tsx"
+      ],
+      "tags": {
+        "AppShell": 1,
+        "div": 69,
+        "h1": 1,
+        "span": 50,
+        "p": 17,
+        "Button": 5,
+        "RefreshCw": 3,
+        "Download": 2,
+        "nav": 1,
+        "a": 5,
+        "CalendarDays": 1,
+        "section": 6,
+        "OperationalMetric": 4,
+        "ShieldCheck": 1,
+        "Zap": 1,
+        "TriangleAlert": 2,
+        "Wallet": 1,
+        "ArrowDownRight": 2,
+        "ArrowUpRight": 9,
+        "Clock3": 1,
+        "strong": 21,
+        "button": 11,
+        "ArrowRight": 1,
+        "Panel": 6,
+        "SearchInput": 1,
+        "X": 2,
+        "kbd": 1,
+        "DataPlaceholder": 6,
+        "Table": 1,
+        "caption": 1,
+        "TableHeader": 1,
+        "TableRow": 3,
+        "TableHead": 6,
+        "input": 2,
+        "TableBody": 1,
+        "TableCell": 7,
+        "Clapperboard": 2,
+        "FileImage": 2,
+        "small": 6,
+        "UserAvatar": 2,
+        "StatusPill": 2,
+        "ChevronRight": 2,
+        "Search": 1,
+        "aside": 1,
+        "QuickLinks": 1,
+        "Gauge": 1,
+        "h2": 8,
+        "details": 1,
+        "summary": 1,
+        "UsersAndPlans": 1,
+        "GrowthCharts": 1,
+        "footer": 1,
+        "label": 2,
+        "select": 2,
+        "option": 7,
+        "Check": 1,
+        "Sheet": 2,
+        "SheetContent": 2,
+        "SheetHeader": 2,
+        "SheetTitle": 2,
+        "SheetDescription": 2,
+        "dl": 3,
+        "dt": 8,
+        "dd": 8,
+        "LoaderCircle": 1,
+        "CheckCircle2": 1,
+        "Link": 2,
+        "i": 5,
+        "SignupDelta": 2,
+        "Users": 1,
+        "ResponsiveContainer": 3,
+        "PieChart": 1,
+        "Pie": 1,
+        "Cell": 2,
+        "b": 4,
+        "ChevronDown": 1,
+        "BarChart": 2,
+        "CartesianGrid": 2,
+        "XAxis": 2,
+        "YAxis": 2,
+        "Tooltip": 2,
+        "SignupTooltip": 2,
+        "Bar": 4,
+        "Info": 2,
+        "ReferenceLine": 1,
+        "module.icon": 1
+      }
+    },
+    {
+      "file": "features/publishing/pages/publishing-page.tsx",
+      "featureFiles": [
+        "features/publishing/pages/publishing-page.tsx",
+        "features/publishing/components/publishing-inspector.tsx",
+        "features/publishing/components/publish-latency-chart.tsx",
+        "features/publishing/components/stuck-age-chart.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/ui/skeleton.tsx",
+        "components/ui/tabs.tsx",
+        "components/stat-card.tsx",
+        "components/panel.tsx",
+        "components/status-pill.tsx",
+        "components/ui/badge.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/data-grid.tsx",
+        "components/ui/table.tsx",
+        "components/ui/button.tsx",
+        "components/ui/checkbox.tsx",
+        "components/search-input.tsx",
+        "components/ui/input.tsx",
+        "components/data-grid-faceted-filter.tsx",
+        "components/ui/separator.tsx",
+        "components/ui/dropdown-menu.tsx",
+        "components/field.tsx",
+        "components/empty-state.tsx",
+        "components/chart-frame.tsx",
+        "components/chart-theme.ts",
+        "components/chart-tooltip.tsx"
+      ],
+      "tags": {
+        "div": 33,
+        "UserAvatar": 2,
+        "span": 11,
+        "TonePill": 3,
+        "PageHeader": 1,
+        "Skeleton": 3,
+        "StatCard": 3,
+        "Hourglass": 2,
+        "AlertTriangle": 2,
+        "Timer": 1,
+        "PublishLatencyChart": 1,
+        "StuckAgeChart": 1,
+        "Tabs": 1,
+        "TabsList": 1,
+        "TabsTrigger": 2,
+        "DataGrid": 1,
+        "PublishingInspector": 1,
+        "Panel": 4,
+        "EmptyState": 1,
+        "Button": 2,
+        "X": 1,
+        "Step": 4,
+        "Cpu": 2,
+        "ShieldCheck": 2,
+        "Rss": 1,
+        "Field": 2,
+        "PanelHeader": 2,
+        "TrendingDown": 1,
+        "TrendingUp": 1,
+        "ChartFrame": 2,
+        "LineChart": 1,
+        "CartesianGrid": 1,
+        "XAxis": 2,
+        "YAxis": 2,
+        "Tooltip": 2,
+        "ChartTooltip": 2,
+        "Legend": 1,
+        "Line": 2,
+        "BarChart": 1,
+        "Bar": 1,
+        "Cell": 1,
+        "LabelList": 1
+      }
+    },
+    {
+      "file": "features/queues/pages/queues-page.tsx",
+      "featureFiles": [
+        "features/queues/pages/queues-page.tsx",
+        "features/queues/components/queue-health.tsx",
+        "features/queues/components/cost-summary.tsx",
+        "features/queues/components/job-inspector.tsx",
+        "features/queues/components/job-trend-chart.tsx",
+        "features/queues/components/error-taxonomy-chart.tsx",
+        "features/queues/components/pipeline-time-chart.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/ui/badge.tsx",
+        "components/ui/skeleton.tsx",
+        "components/stat-card.tsx",
+        "components/panel.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/data-grid.tsx",
+        "components/ui/table.tsx",
+        "components/ui/button.tsx",
+        "components/ui/checkbox.tsx",
+        "components/search-input.tsx",
+        "components/ui/input.tsx",
+        "components/data-grid-faceted-filter.tsx",
+        "components/ui/separator.tsx",
+        "components/ui/dropdown-menu.tsx",
+        "components/metric.tsx",
+        "components/sparkline.tsx",
+        "components/empty-state.tsx",
+        "components/field.tsx",
+        "components/status-pill.tsx",
+        "components/chart-frame.tsx",
+        "components/chart-theme.ts",
+        "components/chart-tooltip.tsx"
+      ],
+      "tags": {
+        "span": 24,
+        "Badge": 2,
+        "div": 49,
+        "UserAvatar": 3,
+        "PageHeader": 1,
+        "Skeleton": 7,
+        "StatCard": 4,
+        "Cpu": 1,
+        "ListTree": 2,
+        "TriangleAlert": 2,
+        "Coins": 2,
+        "QueueHealth": 1,
+        "CostSummaryPanel": 1,
+        "PipelineTimeChart": 1,
+        "JobTrendChart": 1,
+        "ErrorTaxonomyChart": 1,
+        "DataGrid": 1,
+        "JobInspector": 1,
+        "Metric": 3,
+        "Panel": 7,
+        "PanelHeader": 5,
+        "QueueCard": 1,
+        "EmptyState": 2,
+        "Sparkline": 1,
+        "ul": 1,
+        "li": 1,
+        "Button": 4,
+        "Copy": 2,
+        "pre": 1,
+        "TonePill": 1,
+        "X": 1,
+        "Field": 6,
+        "AlertTriangle": 1,
+        "PayloadBlock": 2,
+        "RotateCcw": 1,
+        "ChartFrame": 3,
+        "BarChart": 3,
+        "CartesianGrid": 1,
+        "XAxis": 3,
+        "YAxis": 3,
+        "Tooltip": 3,
+        "ChartTooltip": 3,
+        "Legend": 2,
+        "Bar": 5,
+        "TrendingDown": 1,
+        "TrendingUp": 1,
+        "TrendBars": 1,
+        "Cell": 1,
+        "LabelList": 3
+      }
+    },
+    {
+      "file": "features/settings/pages/settings-page.tsx",
+      "featureFiles": [
+        "features/settings/pages/settings-page.tsx"
+      ],
+      "shared": [
+        "components/page-header.tsx",
+        "components/panel.tsx",
+        "components/ui/button.tsx",
+        "components/ui/badge.tsx",
+        "components/field.tsx",
+        "components/status-pill.tsx",
+        "components/user-avatar.tsx",
+        "components/ui/avatar.tsx",
+        "components/ui/skeleton.tsx"
+      ],
+      "tags": {
+        "div": 12,
+        "PageHeader": 1,
+        "Panel": 3,
+        "PanelHeader": 3,
+        "Skeleton": 3,
+        "UserAvatar": 1,
+        "TonePill": 2,
+        "ShieldCheck": 1,
+        "Field": 6,
+        "span": 3,
+        "Badge": 2,
+        "p": 1,
+        "Button": 1,
+        "LogOut": 1
+      }
+    }
+  ],
+  "raw": [
+    {
+      "file": "components/data-grid.tsx",
+      "tag": "button",
+      "line": 194,
+      "attrs": {
+        "type": "\"button\"",
+        "onClick": "{header.column.getToggleSortingHandler()}",
+        "className": "\"-ml-1 inline-flex items-center gap-1 rounded px-1 py-0.5 text-left hover:text-foreground\""
+      }
+    },
+    {
+      "file": "features/auth/pages/login-page.tsx",
+      "tag": "form",
+      "line": 47,
+      "attrs": {
+        "onSubmit": "{onSubmit}",
+        "className": "\"mt-5 space-y-3\""
+      }
+    },
+    {
+      "file": "features/config/components/category-editor.tsx",
+      "tag": "textarea",
+      "line": 207,
+      "attrs": {
+        "className": "\"min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50\"",
+        "value": "{form.openingMessage ?? ''}",
+        "onChange": "{(e) => setForm((f) => (f ? { ...f, openingMessage: e.target.value } : f))}"
+      }
+    },
+    {
+      "file": "features/config/components/new-category-dialog.tsx",
+      "tag": "textarea",
+      "line": 177,
+      "attrs": {
+        "className": "\"min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50\"",
+        "value": "{form.openingMessage}",
+        "onChange": "{(e) => set('openingMessage', e.target.value)}",
+        "placeholder": "\"Welcome! I'm your …\""
+      }
+    },
+    {
+      "file": "features/design-system/pages/design-system-page.tsx",
+      "tag": "a",
+      "line": 139,
+      "attrs": {
+        "href": "{`#${item.id}`}"
+      }
+    },
+    {
+      "file": "features/overview/components/dashboard-sections.tsx",
+      "tag": "button",
+      "line": 17,
+      "attrs": {
+        "className": "\"example-text-button\"",
+        "onClick": "{onRetry}"
+      }
+    },
+    {
+      "file": "features/overview/components/dashboard-sections.tsx",
+      "tag": "button",
+      "line": 29,
+      "attrs": {
+        "className": "\"example-text-button\"",
+        "onClick": "{onRetry}"
+      }
+    },
+    {
+      "file": "features/overview/components/dashboard-sections.tsx",
+      "tag": "button",
+      "line": 30,
+      "attrs": {
+        "className": "\"overview-metric-link\"",
+        "onClick": "{action}",
+        "aria-label": "{`View ${label.toLowerCase()}`}",
+        "disabled": "{state !== 'ready'}"
+      }
+    },
+    {
+      "file": "features/overview/components/dashboard-sections.tsx",
+      "tag": "button",
+      "line": 61,
+      "attrs": {
+        "className": "\"example-text-button\"",
+        "onClick": "{onRetryPrior}"
+      }
+    },
+    {
+      "file": "features/overview/components/dashboard-sections.tsx",
+      "tag": "select",
+      "line": 98,
+      "attrs": {
+        "aria-label": "\"Chart window\"",
+        "value": "{window}",
+        "onChange": "{event => onWindowChange(event.target.value as ChartWindow)}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "a",
+      "line": 132,
+      "attrs": {
+        "key": "{section.id}",
+        "href": "{`#${section.id}`}",
+        "className": "{activeSection === section.id ? 'example-section-tab-active' : ''}",
+        "aria-current": "{activeSection === section.id ? 'location' : undefined}",
+        "onClick": "{() => setActiveSection(section.id)}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "button",
+      "line": 147,
+      "attrs": {
+        "key": "{tab.value}",
+        "aria-pressed": "{filter === tab.value}",
+        "className": "{filter === tab.value ? 'is-active' : ''}",
+        "onClick": "{() => { setFilter(tab.value); setVisibleLimit(5) }}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "input",
+      "line": 150,
+      "attrs": {
+        "ref": "{selectAllRef}",
+        "type": "\"checkbox\"",
+        "aria-label": "\"Select all visible content\"",
+        "checked": "{allSelected}",
+        "disabled": "{!rows.length}",
+        "onChange": "{event => { const checked = event.target.checked; setSelected(old => { const next = new Set(old); rows.forEach(item => checked ? next.add(item.id) : next.delete(item.id)); return next }) }}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "input",
+      "line": 152,
+      "attrs": {
+        "type": "\"checkbox\"",
+        "aria-label": "{`Select ${title}`}",
+        "checked": "{selected.has(item.id)}",
+        "onChange": "{() => toggleSelection(item.id)}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "button",
+      "line": 153,
+      "attrs": {
+        "className": "\"example-content-title\"",
+        "onClick": "{() => inspect(item)}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "button",
+      "line": 155,
+      "attrs": {
+        "className": "\"example-icon-button\"",
+        "aria-label": "{`Inspect ${title}`}",
+        "onClick": "{() => inspect(item)}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "button",
+      "line": 156,
+      "attrs": {
+        "className": "\"example-text-button\"",
+        "onClick": "{reviewQueue}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "button",
+      "line": 158,
+      "attrs": {
+        "className": "\"example-text-button\"",
+        "onClick": "{() => setVisibleLimit(value => value + 5)}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "button",
+      "line": 158,
+      "attrs": {
+        "className": "\"example-text-button\"",
+        "disabled": "{moderationState !== 'ready' || (!selectedRows.length && !filtered.length)}",
+        "onClick": "{() => download(false)}"
+      }
+    },
+    {
+      "file": "features/overview/pages/overview-page.tsx",
+      "tag": "button",
+      "line": 166,
+      "attrs": {
+        "aria-label": "\"Dismiss confirmation\"",
+        "onClick": "{() => setNotice('')}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "a",
+      "line": 87,
+      "attrs": {
+        "key": "{section.id}",
+        "className": "{activeSection === section.id ? 'example-section-tab-active' : ''}",
+        "aria-current": "{activeSection === section.id ? 'location' : undefined}",
+        "href": "{`#${section.id}`}",
+        "onClick": "{() => setActiveSection(section.id)}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "button",
+      "line": 96,
+      "attrs": {
+        "onClick": "{showReview}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "a",
+      "line": 100,
+      "attrs": {
+        "href": "\"/moderation\"",
+        "className": "\"example-text-button\""
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "button",
+      "line": 102,
+      "attrs": {
+        "key": "{tab.value}",
+        "aria-pressed": "{filter === tab.value}",
+        "className": "{filter === tab.value ? 'is-active' : ''}",
+        "onClick": "{() => setFilter(tab.value)}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "input",
+      "line": 103,
+      "attrs": {
+        "type": "\"checkbox\"",
+        "aria-label": "\"Select all visible content\"",
+        "checked": "{rows.length > 0 && rows.every(row => selected.has(row.id))}",
+        "onChange": "{event => { const checked = event.target.checked; setSelected(old => { const next = new Set(old); rows.forEach(row => checked ? next.add(row.id) : next.delete(row.id)); return next }) }}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "input",
+      "line": 103,
+      "attrs": {
+        "type": "\"checkbox\"",
+        "aria-label": "{`Select ${item.title}`}",
+        "checked": "{selected.has(item.id)}",
+        "onChange": "{() => toggleSelection(item.id)}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "button",
+      "line": 103,
+      "attrs": {
+        "className": "\"example-content-title\"",
+        "onClick": "{event => { inspectTriggerRef.current = event.currentTarget; setInspected(item) }}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "button",
+      "line": 103,
+      "attrs": {
+        "className": "\"example-icon-button\"",
+        "aria-label": "{`Inspect ${item.title}`}",
+        "onClick": "{event => { inspectTriggerRef.current = event.currentTarget; setInspected(item) }}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "button",
+      "line": 103,
+      "attrs": {
+        "className": "\"example-text-button\"",
+        "onClick": "{() => { setQuery(''); setFilter('all') }}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "button",
+      "line": 104,
+      "attrs": {
+        "className": "\"example-text-button\"",
+        "disabled": "{!data || !recent.length}",
+        "onClick": "{() => download()}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "a",
+      "line": 107,
+      "attrs": {
+        "href": "\"/health\"",
+        "className": "\"example-text-button\""
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "select",
+      "line": 113,
+      "attrs": {
+        "aria-label": "\"Preview data state\"",
+        "value": "{scenario}",
+        "onChange": "{event => changeScenario(event.target.value as PreviewScenario)}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "button",
+      "line": 114,
+      "attrs": {
+        "aria-label": "\"Dismiss confirmation\"",
+        "onClick": "{() => setNotice('')}"
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "a",
+      "line": 118,
+      "attrs": {
+        "href": "\"/moderation\""
+      }
+    },
+    {
+      "file": "features/overview-example/pages/overview-example-page.tsx",
+      "tag": "a",
+      "line": 119,
+      "attrs": {
+        "href": "\"/queues\""
+      }
+    },
+    {
+      "file": "layout/app-shell.tsx",
+      "tag": "a",
+      "line": 36,
+      "attrs": {
+        "href": "\"#app-main\"",
+        "className": "\"app-shell-skip\""
+      }
+    },
+    {
+      "file": "layout/topbar.tsx",
+      "tag": "button",
+      "line": 73,
+      "attrs": {
+        "aria-label": "{`Account menu for ${name}`}",
+        "className": "\"flex h-9 items-center gap-2 rounded-full border border-border bg-card pl-1 pr-2.5 outline-none transition-colors hover:bg-secondary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-expanded:bg-secondary\""
+      }
+    }
+  ],
+  "chartFiles": [
+    {
+      "file": "components/chart-frame.tsx",
+      "imports": [
+        "recharts",
+        "@/lib/cn"
+      ]
+    },
+    {
+      "file": "features/explore/components/wes-scatter-chart.tsx",
+      "imports": [
+        "recharts",
+        "@/components/panel",
+        "@/components/ui/skeleton",
+        "@/components/chart-frame",
+        "@/components/chart-theme",
+        "@/lib/cn",
+        "../api/analytics",
+        "../api/schemas"
+      ]
+    },
+    {
+      "file": "features/moderation/components/content-volume-chart.tsx",
+      "imports": [
+        "recharts",
+        "@/components/panel",
+        "@/components/ui/skeleton",
+        "@/components/chart-frame",
+        "@/components/chart-theme",
+        "@/components/chart-tooltip"
+      ]
+    },
+    {
+      "file": "features/overview/components/cohort-paid-chart.tsx",
+      "imports": [
+        "recharts",
+        "@/components/panel",
+        "@/components/ui/skeleton",
+        "@/components/chart-frame",
+        "@/components/chart-theme",
+        "@/components/chart-tooltip",
+        "../api/analytics"
+      ]
+    },
+    {
+      "file": "features/overview/components/dashboard-sections.tsx",
+      "imports": [
+        "lucide-react",
+        "recharts",
+        "@/features/overview/api/analytics",
+        "@tanstack/react-router",
+        "@/components/panel",
+        "../api/presentation",
+        "@/components/panel"
+      ]
+    },
+    {
+      "file": "features/overview/components/signup-trend-chart.tsx",
+      "imports": [
+        "lucide-react",
+        "recharts",
+        "@/components/panel",
+        "@/components/ui/skeleton",
+        "@/components/chart-frame",
+        "@/components/chart-theme",
+        "@/components/chart-tooltip",
+        "@/lib/cn",
+        "../api/analytics"
+      ]
+    },
+    {
+      "file": "features/publishing/components/publish-latency-chart.tsx",
+      "imports": [
+        "lucide-react",
+        "recharts",
+        "@/components/panel",
+        "@/components/ui/skeleton",
+        "@/components/chart-frame",
+        "@/components/chart-theme",
+        "@/components/chart-tooltip",
+        "@/lib/cn",
+        "../api/analytics"
+      ]
+    },
+    {
+      "file": "features/publishing/components/stuck-age-chart.tsx",
+      "imports": [
+        "recharts",
+        "@/components/panel",
+        "@/components/ui/skeleton",
+        "@/components/chart-frame",
+        "@/components/chart-theme",
+        "@/components/chart-tooltip",
+        "../api/analytics"
+      ]
+    },
+    {
+      "file": "features/queues/components/error-taxonomy-chart.tsx",
+      "imports": [
+        "recharts",
+        "@/components/panel",
+        "@/components/ui/skeleton",
+        "@/components/chart-frame",
+        "@/components/chart-theme",
+        "@/components/chart-tooltip",
+        "../api/analytics"
+      ]
+    },
+    {
+      "file": "features/queues/components/job-trend-chart.tsx",
+      "imports": [
+        "lucide-react",
+        "recharts",
+        "@/components/panel",
+        "@/components/ui/skeleton",
+        "@/components/chart-frame",
+        "@/components/chart-theme",
+        "@/components/chart-tooltip",
+        "@/lib/cn",
+        "../api/analytics"
+      ]
+    },
+    {
+      "file": "features/queues/components/pipeline-time-chart.tsx",
+      "imports": [
+        "recharts",
+        "@/components/panel",
+        "@/components/ui/skeleton",
+        "@/components/chart-frame",
+        "@/components/chart-theme",
+        "@/components/chart-tooltip",
+        "../api/analytics"
+      ]
+    }
+  ]
+}

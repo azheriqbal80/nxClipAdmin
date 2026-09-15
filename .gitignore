@@ -1,0 +1,47 @@
+# Local assistant/editor state
+.claude/
+.codex/
+.cursor/
+docs/.obsidian/
+.impeccable/hook.cache.json
+app/.impeccable/hook.cache.json
+
+# Dependencies and build output
+node_modules/
+dist/
+dist-ssr/
+app/node_modules/
+app/dist/
+app/dist-ssr/
+
+# Logs and generated test output
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+test-results/
+app/test-results/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+app/.env
+app/.env.*
+!app/.env.example
+!app/.env.mock
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

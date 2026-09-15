@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-11T18:08:11.536Z",
+  "title": "Overview preview · shared application design",
+  "extensions": {},
+  "components": [],
+  "narrative": {
+    "northStar": "Compact nxClip operations overview",
+    "overview": "The public `/overview-example` route demonstrates the approved Overview with deterministic dummy responses. It shares AppShell, Sidebar, Topbar, Panel, Button, SearchInput, Table, Sheet, and the analytic sections with the application. The global visual contract is the root `DESIGN.md`; all runtime tokens come from `app/src/styles/index.css`.\n\nThis feature owns its composition and fixture scenarios. It does not define a separate theme. `../overview/DESIGN.md` describes the authenticated implementation and its API mapping.",
+    "keyCharacteristics": [
+      "Synthetic data with explicit disclosure.",
+      "Shared application tokens and components.",
+      "Operational work before users and growth."
+    ],
+    "rules": [],
+    "dos": [
+      "Do update the application-wide tokens and components to change the design."
+    ],
+    "donts": [
+      "Do not introduce a preview-only theme or present fixtures as live data."
+    ]
+  }
+}

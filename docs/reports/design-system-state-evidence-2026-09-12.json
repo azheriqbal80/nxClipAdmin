@@ -1,0 +1,187 @@
+{
+  "date": "2026-09-12",
+  "method": "Installed Radix server markup compared with production CSS; no browser execution.",
+  "switchStates": [
+    {
+      "checked": false,
+      "markup": "<button type=\"button\" role=\"switch\" aria-checked=\"false\" data-state=\"unchecked\" value=\"on\"><span data-state=\"unchecked\"></span></button><input type=\"checkbox\" aria-hidden=\"true\" tabindex=\"-1\" style=\"position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)\" value=\"on\"/>"
+    },
+    {
+      "checked": true,
+      "markup": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" data-state=\"checked\" value=\"on\"><span data-state=\"checked\"></span></button><input type=\"checkbox\" aria-hidden=\"true\" tabindex=\"-1\" style=\"position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)\" checked=\"\" value=\"on\"/>"
+    }
+  ],
+  "horizontalTabs": "<div dir=\"ltr\" data-orientation=\"horizontal\"><div role=\"tablist\" aria-orientation=\"horizontal\" tabindex=\"-1\" data-orientation=\"horizontal\" style=\"outline:none\"><button type=\"button\" role=\"tab\" aria-selected=\"true\" aria-controls=\"radix-_R_0_-content-a\" data-state=\"active\" id=\"radix-_R_0_-trigger-a\" tabindex=\"-1\" data-orientation=\"horizontal\" data-radix-collection-item=\"\">A</button></div></div>",
+  "separator": "<div data-orientation=\"horizontal\" role=\"separator\"></div>",
+  "cssFile": "index-DOAo2xrT.css",
+  "selectors": [
+    {
+      "selector": ".group-data-horizontal\\/tabs\\:h-8:is(:where(.group\\/tabs)[data-horizontal] *)",
+      "declarations": [
+        "height:calc(var(--spacing) * 8)"
+      ]
+    },
+    {
+      "selector": ".group-data-horizontal\\/tabs\\:after\\:inset-x-0:is(:where(.group\\/tabs)[data-horizontal] *):after",
+      "declarations": [
+        "content:var(--tw-content)",
+        "inset-inline:0"
+      ]
+    },
+    {
+      "selector": ".group-data-horizontal\\/tabs\\:after\\:bottom-\\[-5px\\]:is(:where(.group\\/tabs)[data-horizontal] *):after",
+      "declarations": [
+        "content:var(--tw-content)",
+        "bottom:-5px"
+      ]
+    },
+    {
+      "selector": ".group-data-horizontal\\/tabs\\:after\\:h-0\\.5:is(:where(.group\\/tabs)[data-horizontal] *):after",
+      "declarations": [
+        "content:var(--tw-content)",
+        "height:calc(var(--spacing) * .5)"
+      ]
+    },
+    {
+      "selector": ".data-checked\\:bg-primary[data-checked]",
+      "declarations": [
+        "background-color:var(--primary)"
+      ]
+    },
+    {
+      "selector": ".group-data-\\[size\\=default\\]\\/switch\\:data-checked\\:translate-x-\\[calc\\(100\\%-2px\\)\\]:is(:where(.group\\/switch)[data-size=default] *)[data-checked],.group-data-\\[size\\=sm\\]\\/switch\\:data-checked\\:translate-x-\\[calc\\(100\\%-2px\\)\\]:is(:where(.group\\/switch)[data-size=sm] *)[data-checked]",
+      "declarations": [
+        "--tw-translate-x:calc(100% - 2px)",
+        "translate:var(--tw-translate-x) var(--tw-translate-y)"
+      ]
+    },
+    {
+      "selector": ".data-horizontal\\:h-2\\.5[data-horizontal]",
+      "declarations": [
+        "height:calc(var(--spacing) * 2.5)"
+      ]
+    },
+    {
+      "selector": ".data-horizontal\\:h-px[data-horizontal]",
+      "declarations": [
+        "height:1px"
+      ]
+    },
+    {
+      "selector": ".data-horizontal\\:w-full[data-horizontal]",
+      "declarations": [
+        "width:100%"
+      ]
+    },
+    {
+      "selector": ".data-horizontal\\:flex-col[data-horizontal]",
+      "declarations": [
+        "flex-direction:column"
+      ]
+    },
+    {
+      "selector": ".data-horizontal\\:border-t[data-horizontal]",
+      "declarations": [
+        "border-top-style:var(--tw-border-style)",
+        "border-top-width:1px"
+      ]
+    },
+    {
+      "selector": ".data-horizontal\\:border-t-transparent[data-horizontal]",
+      "declarations": [
+        "border-top-color:#0000"
+      ]
+    },
+    {
+      "selector": ".data-open\\:animate-in[data-open]",
+      "declarations": [
+        "animation:enter var(--tw-animation-duration,var(--tw-duration,.15s))var(--tw-ease,ease)var(--tw-animation-delay,0s)var(--tw-animation-iteration-count,1)var(--tw-animation-direction,normal)var(--tw-animation-fill-mode,none)"
+      ]
+    },
+    {
+      "selector": ".data-open\\:bg-accent[data-open]",
+      "declarations": [
+        "background-color:var(--accent)"
+      ]
+    },
+    {
+      "selector": ".data-open\\:text-accent-foreground[data-open]",
+      "declarations": [
+        "color:var(--accent-foreground)"
+      ]
+    },
+    {
+      "selector": ".data-open\\:fade-in-0[data-open]",
+      "declarations": [
+        "--tw-enter-opacity:0"
+      ]
+    },
+    {
+      "selector": ".data-open\\:zoom-in-95[data-open]",
+      "declarations": [
+        "--tw-enter-scale:.95"
+      ]
+    },
+    {
+      "selector": ".data-unchecked\\:bg-input[data-unchecked]",
+      "declarations": [
+        "background-color:var(--input)"
+      ]
+    },
+    {
+      "selector": ".group-data-\\[size\\=default\\]\\/switch\\:data-unchecked\\:translate-x-0:is(:where(.group\\/switch)[data-size=default] *)[data-unchecked],.group-data-\\[size\\=sm\\]\\/switch\\:data-unchecked\\:translate-x-0:is(:where(.group\\/switch)[data-size=sm] *)[data-unchecked]",
+      "declarations": [
+        "--tw-translate-x:0px",
+        "translate:var(--tw-translate-x) var(--tw-translate-y)"
+      ]
+    },
+    {
+      "selector": ".data-\\[side\\=bottom\\]\\:data-open\\:slide-in-from-bottom-10[data-side=bottom][data-open]",
+      "declarations": [
+        "--tw-enter-translate-y:calc(.1*100%)"
+      ]
+    },
+    {
+      "selector": ".data-\\[side\\=left\\]\\:data-open\\:slide-in-from-left-10[data-side=left][data-open]",
+      "declarations": [
+        "--tw-enter-translate-x:calc(.1*-100%)"
+      ]
+    },
+    {
+      "selector": ".data-\\[side\\=right\\]\\:data-open\\:slide-in-from-right-10[data-side=right][data-open]",
+      "declarations": [
+        "--tw-enter-translate-x:calc(.1*100%)"
+      ]
+    },
+    {
+      "selector": ".data-\\[side\\=top\\]\\:data-open\\:slide-in-from-top-10[data-side=top][data-open]",
+      "declarations": [
+        "--tw-enter-translate-y:calc(.1*-100%)"
+      ]
+    },
+    {
+      "selector": ".dark\\:data-checked\\:bg-primary-foreground:is(.dark *)[data-checked]",
+      "declarations": [
+        "background-color:var(--primary-foreground)"
+      ]
+    },
+    {
+      "selector": ".dark\\:data-unchecked\\:bg-foreground:is(.dark *)[data-unchecked]",
+      "declarations": [
+        "background-color:var(--foreground)"
+      ]
+    },
+    {
+      "selector": ".dark\\:data-unchecked\\:bg-input\\/80:is(.dark *)[data-unchecked]",
+      "declarations": [
+        "background-color:var(--input)"
+      ]
+    },
+    {
+      "selector": ".dark\\:data-unchecked\\:bg-input\\/80:is(.dark *)[data-unchecked]",
+      "declarations": [
+        "background-color:color-mix(in oklab, var(--input) 80%, transparent)"
+      ]
+    }
+  ]
+}

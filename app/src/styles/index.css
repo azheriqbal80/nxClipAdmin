@@ -1,0 +1,310 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* Self-hosted fonts (no external requests).
+   General Sans (free PolySans stand-in) — woff2 in /public/fonts.
+   JetBrains Mono — bundled via @fontsource-variable, imported in app/main.tsx. */
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@custom-variant dark (&:is(.dark *));
+/* shadcn radix-nova components style selected/open state via `data-active:`;
+   Radix emits data-state="active" — map the variant so it actually applies. */
+@custom-variant data-active (&[data-state='active']);
+
+/* ============================================================================
+   nxClip Admin — approved Overview design, applied application-wide.
+   Near-black canvas · navy-purple surfaces · single lavender accent ·
+   geometric sans · rounded panels · tinted status pills.
+   Dark-first: values live in :root; the app is always in `.dark`.
+   ========================================================================== */
+:root {
+  --radius: 0.5rem;
+
+  /* shadcn semantic tokens → mapped to our palette */
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface-2);
+  --popover-foreground: var(--ink);
+  /* ── Brand ramp ────────────────────────────────────────────────────────────
+     Measured off the mark itself (area-weighted): 56% indigo, 23% violet, 15%
+     cyan. The artwork's own hex values cannot be tokens — five of its seven
+     gradient stops fall below L 0.48 and two sit above L 0.85 — so each rung
+     keeps the measured *hue* and is re-rendered at a lightness this dark field
+     can carry. See DESIGN.md § Colors. */
+  --brand-violet: #8b5cf6; /* violet data series and brand accent */
+  --brand-indigo: #0069ed; /* h 259° L .55 — the mass. GRADIENT ONLY: 4° from --info */
+  --brand-cyan: #02a99b;   /* h 185° L .66 — the highlight; the data second voice */
+
+  --primary: #c4b5fd; /* readable lavender for links, focus and selection */
+  --primary-foreground: #17151f; /* dark ink on lavender */
+  --action: #7c3aed;
+  --action-hover: #6d28d9;
+  --action-foreground: var(--ink);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-2);
+  --muted-foreground: #a7a8b3;
+  --accent: var(--elevated);
+  --accent-foreground: var(--ink);
+  --destructive: #fc9198;
+  --destructive-foreground: #17151f;
+  --border: #282b39;
+  --input: var(--border);
+  --ring: var(--primary);
+
+  /* Categorical data palette — for series identity only, never for state.
+     Validated against the shared dark card surface: every step sits inside
+     the OKLCH L 0.48–0.67 band with C >= 0.10, worst adjacent-pair CVD
+     separation checked by the palette script, all >= 3:1 contrast.
+     Lightness alternates across slots on purpose — that is what keeps adjacent
+     series distinguishable for colour-vision deficiency and in greyscale.
+     Do NOT substitute --success / --warning / --destructive here: status
+     colours are reserved, and a neutral series must not read as good or bad.
+     Assign slots in fixed order; never cycle. Re-validate if edited. */
+  /* Slots 1-3 are the brand ramp. Slots 4-5 sit deliberately OUTSIDE it: the
+     brand spans only h 182-292°, and five series crowded into a 110° arc lose
+     separation under deuteranopia. Enforced by `npm run palette`. */
+  --chart-1: var(--brand-violet);
+  --chart-2: #395fc1; /* indigo family, adjusted for contrast on the shared surface */
+  --chart-3: var(--brand-cyan);
+  --chart-4: #bb8d07; /* gold — off-brand by design, for separation */
+  --chart-5: #a73b80; /* magenta — off-brand by design, for separation */
+
+  /* sidebar tokens (shadcn sidebar-ready) */
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--muted-foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #242039;
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--primary);
+
+  /* nxClip extended tokens (no collision with shadcn names) */
+  --canvas: #0b0c12;
+  --surface: #141620;
+  --surface-2: #191b26;
+  --elevated: #1f2130;
+  --ink: #f4f4f7;
+  --faint: var(--muted-foreground);
+  --line: var(--border);
+  --line-strong: #3b3e50;
+  --primary-strong: #a892f6;
+  --success: #65dba0;
+  --warning: #f5bd61;
+  --info: #60a5fa;
+  --chart-neutral: #69738e;
+  --chart-muted: #8180a5;
+  --chart-teal: #57b9af;
+  --motion-duration: 180ms;
+
+  /* Layout rails — consumed as h-(--spacing-topbar) / w-(--spacing-sidebar) by
+     the app shell. Keeps the topbar and the sidebar's logo block on one
+     baseline; all routes use the same 64px bar and responsive rail width. */
+  --spacing-topbar: 4rem;
+  --spacing-sidebar: 15rem;
+}
+
+@media (max-width: 1279px) {
+  :root { --spacing-sidebar: 13.75rem; }
+}
+
+/* Radius scale — five rungs plus `rounded-full`, each with one job.
+   Depth in this system comes from tonal layering; radius signals *scale*:
+   the bigger the surface, the softer the corner. Anything above `xl` is
+   deliberately absent, so `rounded-2xl`/`3xl`/`4xl` fall outside the system
+   and are flagged by `npm run ds:audit`. See DESIGN.md § Shapes.
+
+   Deliberately NOT `@theme inline`: the inline form bakes values into the
+   utilities and emits no custom property, so `var(--radius-lg)` would silently
+   fall back — the same failure mode that once collapsed the topbar. Declared
+   here, the rungs are real custom properties *and* generate the utilities. */
+/* Micro-typography rungs the Tailwind scale doesn't cover. These were 52
+   hand-written arbitrary values (`text-[11px]` and friends) before being named;
+   `ds:audit` now rejects arbitrary font sizes so they can't come back.
+   Plain `@theme` (not `inline`) so each is a real custom property too. */
+@theme {
+  --text-micro: 10px; /* micro-labels inside tiles and stat blocks */
+  --text-caption: 11px; /* eyebrows, captions, chart labels, metadata */
+  --text-ui: 13px; /* compact navigation and controls */
+  --text-page-title: 24px;
+  --text-subtitle: 15px; /* panel and inspector titles */
+  --text-kpi: 30px; /* KPI figures inside StatCard */
+  --text-display: 32px; /* rare hero figure */
+}
+
+@theme {
+  --radius-xs: 4px; /* checkbox, tooltip arrow, tiny marks */
+  --radius-sm: 6px; /* nested chips, small inset blocks */
+  --radius-md: 8px; /* compact controls, menu items, tooltips */
+  --radius-lg: 8px; /* standard buttons, inputs and navigation */
+  --radius-xl: 12px; /* cards, panels, dialogs */
+}
+
+@theme inline {
+
+  --font-sans: 'General Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-action-foreground: var(--action-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* extended */
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-elevated: var(--elevated);
+  --color-ink: var(--ink);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary-strong: var(--primary-strong);
+  --color-brand-violet: var(--brand-violet);
+  --color-brand-indigo: var(--brand-indigo);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: color-mix(in srgb, var(--ring) 50%, transparent);
+  }
+  html {
+    color-scheme: dark;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 35%, transparent);
+    color: var(--foreground);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  /* Tinted status/priority pills: colored text on a low-alpha wash of the same hue. */
+  .tone-success {
+    color: var(--success);
+    background: color-mix(in srgb, var(--success) 14%, transparent);
+  }
+  .tone-warning {
+    color: var(--warning);
+    background: color-mix(in srgb, var(--warning) 14%, transparent);
+  }
+  .tone-danger {
+    color: var(--destructive);
+    background: color-mix(in srgb, var(--destructive) 15%, transparent);
+  }
+  .tone-info {
+    color: var(--info);
+    background: color-mix(in srgb, var(--info) 14%, transparent);
+  }
+  .tone-accent {
+    color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 16%, transparent);
+  }
+  .tone-neutral {
+    color: var(--muted-foreground);
+    background: color-mix(in srgb, var(--muted-foreground) 14%, transparent);
+  }
+
+  /* The ramp as a flat sweep, in the hue order the mark reads: violet 292° →
+     indigo 259° → cyan 185°. Monotonic in hue, so it never muddies. */
+  .brand-ramp {
+    background-image: linear-gradient(
+      100deg,
+      var(--brand-violet) 0%,
+      var(--brand-indigo) 46%,
+      var(--brand-cyan) 100%
+    );
+  }
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- iOS ignores SVG favicons, so ship the raster too. -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>nxClip Admin</title>
+  </head>
+  <body>
+    <!-- impeccable:direction-contract seed=aivora-ops-console
+      THESIS: nxClip Admin is an operations console; it refuses the consumer app's masonry/marketing gloss for a dense, legible triage surface where status and action always read first.
+      OWN-WORLD: near-black canvas (#09090b) under a violet glow, navy-purple panels (#121218/#252435), one lavender accent (#C5BAFB), General Sans display + JetBrains Mono for IDs, rounded-xl panels, tinted status pills, sidebar + top bar + 70/30 table+inspector.
+      STORY: an operator lands in the moderation queue, scans status pills, selects a row, inspects media/prompt/failure in the right panel, and acts (approve / take down) without leaving the view.
+      FIRST VIEWPORT: left nav rail (logo, nav, service-health dots, Ask-AI card) + top bar (search, bell, theme, profile) + content = page header with a primary action, then a dense data table; primary action sits top-right.
+      FORM: dashboard / ops-console, pinned to the Aivora reference (user-pinned world; no concept roll).
+      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
+    -->
+    <div id="root"></div>
+    <script type="module" src="/src/app/main.tsx"></script>
+  </body>
+</html>

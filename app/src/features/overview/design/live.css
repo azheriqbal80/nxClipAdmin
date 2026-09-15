@@ -1,0 +1,27 @@
+/* Integration of the approved composition with the authenticated scroll frame. */
+.overview-live { display: block; min-height: 100%; }
+.overview-live .example-main { padding-bottom: 32px; }
+.overview-live .overview-table-search { margin: 18px 18px 0; width: auto; max-width: 400px; }
+.overview-live .example-table-toolbar { margin-top: 12px; }
+.overview-live .example-date-cell { white-space: normal; min-width: 105px; max-width: 120px; }
+.overview-live .example-content-title strong { max-width: 170px; }
+.overview-live .example-creator strong,.overview-live .example-creator small { max-width: 115px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.overview-live .overview-attention-banner > a { display: flex; align-items: center; gap: 7px; margin-left: auto; white-space: nowrap; color: var(--warning); font-size: 11px; }
+.overview-live .overview-live-warning { display: flex; align-items: center; gap: 8px; color: var(--warning); padding: 12px 0; margin-bottom: 10px; }
+.overview-live .overview-health-summary .overview-data-placeholder { min-height: 140px; padding: 16px 0; }
+.overview-live .overview-table-actions { display: flex; gap: 18px; }
+.overview-live .overview-table-scope { padding: 0 18px 14px; color: var(--muted-foreground); font-size: 11px; }
+.overview-live .overview-metric-danger .overview-metric-detail > svg { color: var(--destructive); }
+.overview-live .example-table-scroll:focus-visible { outline: 2px solid var(--primary); outline-offset: -3px; }
+.overview-live .overview-metric-main { flex-wrap: wrap; }
+.overview-live .overview-growth-grid [data-slot="panel-header"] { flex-wrap: wrap; }
+.overview-live .overview-chart-caption { min-height: 84px; }
+@media (min-width: 1600px) {
+  .overview-live .example-content-title strong { max-width: 265px; }
+}
+@media (max-width: 767px) {
+  .overview-live .overview-table-search { max-width: none; }
+  .overview-live .overview-table-search input { font-size: 16px; }
+  .overview-live .overview-attention-banner > a { margin-left: 28px; min-height: 32px; }
+  .overview-live .example-table-footer { align-items: flex-start; }
+}
