@@ -281,9 +281,10 @@ const TYPE_SCALE: { label: string; cls: string; px: string }[] = [
 ]
 
 /** The derived brand files and their intended surfaces. */
+const publicAsset = (fileName: string) => `${import.meta.env.BASE_URL}${fileName}`
 const BRAND_ASSETS = [
-  { src: '/logo-mark.svg', px: 48, use: 'in-app chrome — no tile' },
-  { src: '/favicon.svg', px: 48, use: 'browser tab — full-bleed tile' },
+  { src: publicAsset('logo-mark.svg'), px: 48, use: 'in-app chrome — no tile' },
+  { src: publicAsset('favicon.svg'), px: 48, use: 'browser tab — full-bleed tile' },
 ] as const
 
 const ICON_SCALE: { cls: string; px: string; use: string }[] = [
@@ -373,7 +374,7 @@ export function DesignSystemPage() {
                   Browser / app icon
                 </div>
                 <div className="flex min-h-36 items-center justify-center rounded-xl border border-border bg-surface-2">
-                  <img src="/apple-touch-icon.png" width={96} height={96} alt="" className="size-24" />
+                  <img src={publicAsset('apple-touch-icon.png')} width={96} height={96} alt="" className="size-24" />
                 </div>
                 <p className="mt-3 text-caption text-muted-foreground">
                   The full tile stays intact in browser and OS chrome, where a self-contained

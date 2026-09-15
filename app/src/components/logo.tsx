@@ -20,6 +20,7 @@ const SIZES = {
   sm: { mark: 'size-8', px: 32, word: 'text-base', gap: 'gap-2.5' },
   lg: { mark: 'size-12', px: 48, word: 'text-lg', gap: 'gap-3' },
 } as const
+const logoMarkSrc = `${import.meta.env.BASE_URL}logo-mark.svg`
 
 export function Logo({
   className,
@@ -34,7 +35,7 @@ export function Logo({
   return (
     <div className={cn('flex items-center', s.gap, className)}>
       <img
-        src="/logo-mark.svg"
+        src={logoMarkSrc}
         // Decorative beside the wordmark — the name is already read out there.
         alt={showWordmark ? '' : 'nxClip'}
         aria-hidden={showWordmark || undefined}
