@@ -1,4 +1,11 @@
-import { createRootRoute, createRoute, createRouter, lazyRouteComponent, Outlet } from '@tanstack/react-router'
+import {
+  createHashHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  lazyRouteComponent,
+  Outlet,
+} from '@tanstack/react-router'
 import { AuthedLayout } from './authed-layout'
 import { LoginPage } from '@/features/auth'
 import { OverviewPage } from '@/features/overview'
@@ -13,7 +20,7 @@ import { HealthPage } from '@/features/health'
 import { PlansPage, CoachPage } from '@/features/config'
 import { SettingsPage } from '@/features/settings'
 
-const basepath = import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '')
+const githubPagesHistory = import.meta.env.BASE_URL === '/' ? undefined : createHashHistory()
 
 const rootRoute = createRootRoute({ component: () => <Outlet /> })
 
@@ -108,7 +115,7 @@ const routeTree = rootRoute.addChildren([
 
 export const router = createRouter({
   routeTree,
-  basepath,
+  history: githubPagesHistory,
   defaultPreload: 'intent',
   scrollRestoration: true,
 })
