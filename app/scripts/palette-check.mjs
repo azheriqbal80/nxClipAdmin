@@ -8,7 +8,7 @@
  *
  * Run: npm run palette
  */
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import {
   hex2rgb, rgb2hex, oklch, deltaE, simulate, CVD_TYPES, contrast, over,
 } from './lib/color.mjs'
@@ -126,25 +126,30 @@ for (const c of CHARTS) {
 
 // ── 6. DESIGN.md's frontmatter is a token source, so it must not drift ───────
 // Documented color names map directly to runtime CSS tokens, including aliases.
-const doc = readFileSync('../DESIGN.md', 'utf8')
-const fm = doc.slice(doc.indexOf('colors:'), doc.indexOf('typography:'))
-let documentedColors = 0
-for (const line of fm.split(/\r?\n/)) {
-  const m = line.match(/^ {2}([a-z0-9-]+): "(#[0-9a-fA-F]{6})"$/)
-  if (!m) continue
-  const [, docName, docHex] = m
-  const cssName = docName
-  documentedColors++
-  let css
-  try { css = token(cssName) } catch {
-    fail('doc-drift', `DESIGN.md documents ${docName}, but no matching runtime color resolves`)
-    continue
+const designDocPath = ['../DESIGN.md', './DESIGN.md'].find(path => existsSync(path))
+if (designDocPath) {
+  const doc = readFileSync(designDocPath, 'utf8')
+  const fm = doc.slice(doc.indexOf('colors:'), doc.indexOf('typography:'))
+  let documentedColors = 0
+  for (const line of fm.split(/\r?\n/)) {
+    const m = line.match(/^ {2}([a-z0-9-]+): "(#[0-9a-fA-F]{6})"$/)
+    if (!m) continue
+    const [, docName, docHex] = m
+    const cssName = docName
+    documentedColors++
+    let css
+    try { css = token(cssName) } catch {
+      fail('doc-drift', `DESIGN.md documents ${docName}, but no matching runtime color resolves`)
+      continue
+    }
+    if (rgb2hex(css).toLowerCase() !== docHex.toLowerCase()) {
+      fail('doc-drift', `DESIGN.md frontmatter has ${docName}: ${docHex}, but --${cssName} is ${rgb2hex(css)}`)
+    }
   }
-  if (rgb2hex(css).toLowerCase() !== docHex.toLowerCase()) {
-    fail('doc-drift', `DESIGN.md frontmatter has ${docName}: ${docHex}, but --${cssName} is ${rgb2hex(css)}`)
-  }
+  if (!documentedColors) fail('doc-drift', 'DESIGN.md must document the runtime colors in its frontmatter')
+} else {
+  warn('doc-drift', 'DESIGN.md is outside this deployment root, so documented color drift was not checked')
 }
-if (!documentedColors) fail('doc-drift', 'DESIGN.md must document the runtime colors in its frontmatter')
 
 // ── report ───────────────────────────────────────────────────────────────────
 const label = process.argv.includes('--quiet') ? () => {} : console.log
