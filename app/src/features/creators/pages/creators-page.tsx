@@ -9,6 +9,7 @@ import { TonePill } from '@/components/status-pill'
 import { UserAvatar } from '@/components/user-avatar'
 import { DataGrid, type FacetedFilterConfig } from '@/components/data-grid'
 import { useRevealOnSelect } from '@/hooks/use-reveal-on-select'
+import { useAutoFetchNextPages } from '@/hooks/use-auto-fetch-next-pages'
 import { mergeDefined } from '@/lib/merge-defined'
 import { formatTableDate } from '@/lib/date-format'
 import { CreatorInspector } from '../components/creator-inspector'
@@ -110,14 +111,15 @@ const facetedFilters: FacetedFilterConfig[] = [
 
 export function CreatorsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const { data, isLoading, isError } = useCreators('', 'all')
+  const creators = useCreators('', 'all')
   const setActive = useSetCreatorActive()
+  useAutoFetchNextPages(creators)
 
   // Entitlement pressure: today's generations vs each plan's daily cap.
   const caps = usePlanCaps()
   const usage = useUsageJobs()
 
-  const items = data?.pages.flatMap((p) => p.items) ?? []
+  const items = creators.data?.pages.flatMap((p) => p.items) ?? []
   const row = items.find((c) => c.id === selectedId) ?? null
   const inspectorRef = useRef<HTMLDivElement>(null)
   useRevealOnSelect(inspectorRef, row?.id ?? null)
@@ -152,7 +154,7 @@ export function CreatorsPage() {
           usage.data?.items ?? [],
           (usage.data?.items.length ?? 0) >= USAGE_WINDOW,
         )}
-        loading={caps.isLoading || usage.isLoading || isLoading}
+        loading={caps.isLoading || usage.isLoading || creators.isLoading}
         error={caps.isError || usage.isError}
       />
 
@@ -166,8 +168,8 @@ export function CreatorsPage() {
           searchPlaceholder="Search name, @handle or email…"
           facetedFilters={facetedFilters}
           pageSize={10}
-          isLoading={isLoading}
-          isError={isError}
+          isLoading={creators.isLoading}
+          isError={creators.isError}
           emptyMessage="No creators match your filters."
           onRowClick={(c) => setSelectedId(c.id)}
           getRowActionLabel={(c) => `Inspect ${c.displayName}`}

@@ -14,6 +14,7 @@ import {
   useCategoryQuestions,
   useAddQuestion,
   useSaveQuestions,
+  useToggleQuestionActive,
   type CategoryUpdate,
 } from '../api/queries'
 import {
@@ -38,6 +39,7 @@ function toForm(c: CoachCategory): CategoryUpdate {
 /** Editable row. `chipsText` is the raw comma-separated string so typing a comma
     doesn't immediately split into an empty chip. */
 interface QuestionForm {
+  id?: string
   questionNumber: number
   message: string
   chipsText: string
@@ -46,6 +48,7 @@ interface QuestionForm {
 }
 
 const toQuestionForm = (q: CoachQuestion): QuestionForm => ({
+  id: q.id,
   questionNumber: q.questionNumber,
   message: q.message,
   chipsText: questionChips(q).join(', '),
@@ -67,6 +70,7 @@ export function CategoryEditor({
   const questions = useCategoryQuestions(category?.id ?? null)
   const addQuestion = useAddQuestion()
   const saveQuestions = useSaveQuestions()
+  const toggleQuestionActive = useToggleQuestionActive()
   const [form, setForm] = useState<CategoryUpdate | null>(null)
   const [newQ, setNewQ] = useState<{ message: string; chips: string; multiSelect: boolean } | null>(
     null,
@@ -114,7 +118,15 @@ export function CategoryEditor({
 
   const readiness = categoryReadiness(category)
   const baseline = (loaded ?? []).map(toQuestionForm)
-  const questionsDirty = JSON.stringify(qForm) !== JSON.stringify(baseline)
+  const draftComparable = (rows: QuestionForm[]) =>
+    rows.map(({ questionNumber, message, chipsText, multiSelect }) => ({
+      questionNumber,
+      message,
+      chipsText,
+      multiSelect,
+    }))
+  const questionsDirty =
+    JSON.stringify(draftComparable(qForm)) !== JSON.stringify(draftComparable(baseline))
   const questionsValid = qForm.every((q) => q.message.trim().length > 0)
 
   /**
@@ -144,6 +156,28 @@ export function CategoryEditor({
             description: `${qForm.length} question${qForm.length === 1 ? '' : 's'} in ${category.label}`,
           }),
         onError: () => toast.error('Save failed — questions unchanged'),
+      },
+    )
+  }
+
+  const onToggleQuestionActive = (q: QuestionForm, index: number, nextActive: boolean) => {
+    if (!q.id) return
+    setQ(index, { isActive: nextActive })
+    toggleQuestionActive.mutate(
+      {
+        categoryId: category.id,
+        questionId: q.id,
+        isActive: nextActive,
+      },
+      {
+        onSuccess: () =>
+          toast.success(`Q${q.questionNumber} ${nextActive ? 'enabled' : 'disabled'}`, {
+            description: category.label,
+          }),
+        onError: () => toast.error('Toggle failed — question unchanged'),
+        onSettled: (_data, error) => {
+          if (error) setQ(index, { isActive: q.isActive })
+        },
       },
     )
   }
@@ -279,7 +313,8 @@ export function CategoryEditor({
                       className="ml-auto"
                       aria-label={`Q${q.questionNumber} active`}
                       checked={q.isActive}
-                      onCheckedChange={(v) => setQ(i, { isActive: v })}
+                      disabled={!q.id || toggleQuestionActive.isPending}
+                      onCheckedChange={(v) => onToggleQuestionActive(q, i, v)}
                     />
                   </div>
                   <Input

@@ -9,6 +9,7 @@ import { UserAvatar } from '@/components/user-avatar'
 import { DataGrid, type FacetedFilterConfig } from '@/components/data-grid'
 import { useUserNames } from '@/hooks/use-user-names'
 import { useRevealOnSelect } from '@/hooks/use-reveal-on-select'
+import { useAutoFetchNextPages } from '@/hooks/use-auto-fetch-next-pages'
 import { formatTableDate } from '@/lib/date-format'
 import { QueueHealth } from '../components/queue-health'
 import { CostSummaryPanel } from '../components/cost-summary'
@@ -78,6 +79,7 @@ export function QueuesPage() {
   const queues = useQueues()
   const costs = useCostSummary()
   const jobs = useFailedJobs()
+  useAutoFetchNextPages(jobs)
   // All statuses — the failure *rate* needs a denominator, not just failures.
   const jobWindow = useJobWindow()
 

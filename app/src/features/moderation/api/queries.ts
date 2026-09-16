@@ -31,13 +31,21 @@ export type QueueStatusFilter =
   | 'deleted'
   | 'all'
 
+/** Gateway maximum: `limit` > 100 returns 400. Use the max so all-pages loading
+    completes in the fewest cursor requests. */
+const CONTENT_PAGE_SIZE = 100
+
 export function useModerationQueue(status: QueueStatusFilter) {
   return useInfiniteQuery({
     queryKey: moderationKeys.list(status),
     queryFn: ({ pageParam }) =>
       api.get<ModerationList>('/admin/content', {
         // 'all' is a UI concept — the gateway wants the status param omitted.
-        params: { status: status === 'all' ? undefined : status, cursor: pageParam, limit: 50 },
+        params: {
+          status: status === 'all' ? undefined : status,
+          cursor: pageParam,
+          limit: CONTENT_PAGE_SIZE,
+        },
         schema: moderationListSchema,
       }),
     initialPageParam: undefined as string | undefined,

@@ -30,6 +30,7 @@ export const queueKeys = {
     page, so the window is knowable and we never imply we aggregated the whole
     table. Server-side aggregation is the fix once volume grows. */
 export const TREND_WINDOW = 100
+const FAILED_JOBS_PAGE_SIZE = 100
 
 /**
  * Recent jobs across **all** statuses — the denominator a failure *rate* needs.
@@ -71,7 +72,7 @@ export function useFailedJobs() {
     queryKey: queueKeys.jobs('failed'),
     queryFn: ({ pageParam }) =>
       api.get<JobList>('/admin/jobs', {
-        params: { status: 'failed', cursor: pageParam, limit: 50 },
+        params: { status: 'failed', cursor: pageParam, limit: FAILED_JOBS_PAGE_SIZE },
         schema: jobListSchema,
       }),
     initialPageParam: undefined as string | undefined,

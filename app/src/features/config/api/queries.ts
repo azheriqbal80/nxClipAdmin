@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/api/client'
 import {
   coachCategoryListSchema,
+  coachCategorySchema,
   coachQuestionListSchema,
   planLimitsSchema,
   planListSchema,
@@ -14,6 +15,7 @@ import {
 export const configKeys = {
   plans: ['config', 'plans'] as const,
   coach: ['config', 'coach'] as const,
+  coachCategory: (categoryId: string) => ['config', 'coach', 'category', categoryId] as const,
   questions: (categoryId: string) => ['config', 'coach', categoryId, 'questions'] as const,
 }
 
@@ -85,6 +87,17 @@ export function useCoachCategories() {
   })
 }
 
+export function useCoachCategory(categoryId: string | null) {
+  return useQuery({
+    queryKey: configKeys.coachCategory(categoryId ?? 'none'),
+    enabled: !!categoryId,
+    queryFn: () =>
+      api.get<CoachCategory>(`/admin/coach/categories/${categoryId}`, {
+        schema: coachCategorySchema,
+      }),
+  })
+}
+
 export type CategoryCreate = Pick<
   CoachCategory,
   'slug' | 'label' | 'openingMessage' | 'progressLabel' | 'sortOrder' | 'isActive'
@@ -124,7 +137,10 @@ export function useUpdateCategory() {
   return useMutation({
     mutationFn: ({ id, body }: { id: string; body: CategoryUpdate }) =>
       api.patch<void>(`/admin/coach/categories/${id}`, { body }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: configKeys.coach }),
+    onSuccess: (_d, v) => {
+      qc.invalidateQueries({ queryKey: configKeys.coach })
+      qc.invalidateQueries({ queryKey: configKeys.coachCategory(v.id) })
+    },
   })
 }
 
@@ -207,13 +223,31 @@ export function useSaveQuestions() {
   })
 }
 
+export function useToggleQuestionActive() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      questionId,
+      isActive,
+    }: {
+      categoryId: string
+      questionId: string
+      isActive: boolean
+    }) => api.patch<void>(`/admin/coach/questions/${questionId}`, { body: { isActive } }),
+    onSuccess: (_d, v) => {
+      qc.invalidateQueries({ queryKey: configKeys.questions(v.categoryId) })
+      qc.invalidateQueries({ queryKey: configKeys.coachCategory(v.categoryId) })
+      // Readiness and active counts both move when a question is toggled.
+      qc.invalidateQueries({ queryKey: configKeys.coach })
+    },
+  })
+}
+
 /**
- * Superseded by `useSaveQuestions`, and deliberately not re-added.
+ * `PATCH /admin/coach/questions/:id` is intentionally separate from the bulk
+ * question editor.
  *
- * `PATCH /admin/coach/questions/:id` can only flip `isActive`. Wiring it to the
- * editor's active switch meant that switch applied instantly while a text edit
- * needed Save — two different commit models in one panel. The bulk upsert now
- * owns every question field including `isActive`, so the whole panel commits
- * once. The route still exists and is still probed by `npm run api:audit`; the
- * app just has no use for it.
+ * The row Active switch uses PATCH for the narrow operational case: enable or
+ * disable one existing row immediately, without rewriting the whole category's
+ * question set. Text, chips, and multi-select still use the bulk save.
  */

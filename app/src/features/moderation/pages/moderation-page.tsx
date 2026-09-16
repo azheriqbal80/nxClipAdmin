@@ -6,6 +6,7 @@ import { UserAvatar } from '@/components/user-avatar'
 import { DataGrid, type FacetedFilterConfig } from '@/components/data-grid'
 import { useUserNames } from '@/hooks/use-user-names'
 import { useRevealOnSelect } from '@/hooks/use-reveal-on-select'
+import { useAutoFetchNextPages } from '@/hooks/use-auto-fetch-next-pages'
 import { mergeDefined } from '@/lib/merge-defined'
 import { formatTableDate } from '@/lib/date-format'
 import { ModerationInspector } from '../components/moderation-inspector'
@@ -101,7 +102,16 @@ function buildColumns(resolveUser: (id: string) => string): ColumnDef<Moderation
 
 export function ModerationPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const { data, isLoading, isError } = useModerationQueue('all')
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+  } = useModerationQueue('all')
+  useAutoFetchNextPages({ fetchNextPage, hasNextPage, isFetching, isFetchingNextPage })
 
   // Whole-mix view: what's arriving and what becomes of it.
   const volumeQuery = useContentVolume()

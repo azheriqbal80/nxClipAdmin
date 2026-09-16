@@ -8,13 +8,15 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  type Column,
   type ColumnDef,
   type ColumnFiltersState,
   type RowSelectionState,
   type SortingState,
+  type VisibilityState,
   type Table as TanTable,
 } from '@tanstack/react-table'
-import { ArrowDown, ArrowUp, ChevronsUpDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowDown, ArrowUp, ChevronsUpDown, ChevronLeft, ChevronRight, Columns3 } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -25,6 +27,14 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { SearchInput } from '@/components/search-input'
 import { DataGridFacetedFilter, type FacetOption } from '@/components/data-grid-faceted-filter'
@@ -67,6 +77,15 @@ function isInteractiveTarget(target: EventTarget | null) {
     && Boolean(target.closest('a, button, input, select, textarea, [role="button"], [role="menuitem"]'))
 }
 
+function columnLabel<TData>(column: Column<TData, unknown>) {
+  const header = column.columnDef.header
+  if (typeof header === 'string') return header
+  return column.id
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+}
+
 export function DataGrid<TData>({
   data,
   columns,
@@ -87,6 +106,7 @@ export function DataGrid<TData>({
 }: DataGridProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>(initialSorting)
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [globalFilter, setGlobalFilter] = useState('')
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
@@ -96,6 +116,7 @@ export function DataGrid<TData>({
           id: SELECT_COLUMN,
           enableSorting: false,
           enableGlobalFilter: false,
+          enableHiding: false,
           size: 36,
           header: ({ table }) => (
             <Checkbox
@@ -130,6 +151,7 @@ export function DataGrid<TData>({
           id: ROW_ACTION_COLUMN,
           enableSorting: false,
           enableGlobalFilter: false,
+          enableHiding: false,
           size: 44,
           header: () => <span className="sr-only">Open row details</span>,
           cell: ({ row }) => (
@@ -153,9 +175,10 @@ export function DataGrid<TData>({
     data,
     columns: allColumns,
     getRowId,
-    state: { sorting, columnFilters, globalFilter, rowSelection },
+    state: { sorting, columnFilters, columnVisibility, globalFilter, rowSelection },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
     onGlobalFilterChange: setGlobalFilter,
     onRowSelectionChange: setRowSelection,
     enableRowSelection: enableSelection,
@@ -169,8 +192,10 @@ export function DataGrid<TData>({
   })
 
   const selectedRows = table.getSelectedRowModel().rows.map((r) => r.original)
+  const hideableColumns = table.getAllLeafColumns().filter((column) => column.getCanHide())
+  const hiddenCount = hideableColumns.filter((column) => !column.getIsVisible()).length
 
-  const hasToolbar = searchable || facetedFilters.length > 0
+  const hasToolbar = searchable || facetedFilters.length > 0 || hideableColumns.length > 0
   const showBulkBar = enableSelection && selectedRows.length > 0
 
   return (
@@ -194,6 +219,35 @@ export function DataGrid<TData>({
               options={f.options}
             />
           ))}
+          {hideableColumns.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="toolbar" className="border-dashed">
+                  <Columns3 />
+                  Columns
+                  {hiddenCount > 0 && (
+                    <span className="ml-1 rounded bg-secondary px-1 font-mono text-[10px] text-muted-foreground tabular-nums">
+                      {hiddenCount}
+                    </span>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-52">
+                <DropdownMenuLabel>Columns</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {hideableColumns.map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    checked={column.getIsVisible()}
+                    onSelect={(event) => event.preventDefault()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
+                    {columnLabel(column)}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       )}
 

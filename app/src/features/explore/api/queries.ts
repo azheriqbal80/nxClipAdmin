@@ -7,6 +7,8 @@ export const exploreKeys = {
   list: (sort: ExploreSort) => [...exploreKeys.all, 'list', sort] as const,
 }
 
+const EXPLORE_PAGE_SIZE = 100
+
 export function useExplore(sort: ExploreSort) {
   return useInfiniteQuery({
     // sort is applied client-side (the live endpoint 400s on a `sort` param);
@@ -14,8 +16,8 @@ export function useExplore(sort: ExploreSort) {
     queryKey: exploreKeys.list(sort),
     queryFn: ({ pageParam }) =>
       api.get<ExploreList>('/admin/explore', {
-        // Live payload is a single flat page (no cursor); pull a generous slice.
-        params: { cursor: pageParam, limit: 50 },
+        // Sort is client-side; pull the gateway's largest practical page first.
+        params: { cursor: pageParam, limit: EXPLORE_PAGE_SIZE },
         schema: exploreListSchema,
       }),
     initialPageParam: undefined as string | undefined,

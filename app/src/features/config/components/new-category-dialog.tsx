@@ -26,6 +26,8 @@ const EMPTY: CategoryCreate = {
   isActive: true,
 }
 
+const freshForm = (sortOrder: number): CategoryCreate => ({ ...EMPTY, sortOrder })
+
 /** Server constraints, mirrored client-side so a create can't 400.
  *
  * Re-verified live 2026-09-09 against `POST /admin/coach/categories`:
@@ -88,10 +90,21 @@ function textError(value: string) {
 export function NewCategoryDialog({ nextSortOrder }: { nextSortOrder: number }) {
   const create = useCreateCategory()
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState<CategoryCreate>({ ...EMPTY, sortOrder: nextSortOrder })
+  const [form, setForm] = useState<CategoryCreate>(() => freshForm(nextSortOrder))
 
   // Once the slug has been edited by hand, stop deriving it from the label.
   const [slugTouched, setSlugTouched] = useState(false)
+
+  const resetDraft = () => {
+    setForm(freshForm(nextSortOrder))
+    setSlugTouched(false)
+  }
+
+  const onOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) resetDraft()
+    if (!nextOpen && !create.isPending) resetDraft()
+    setOpen(nextOpen)
+  }
 
   const set = <K extends keyof CategoryCreate>(k: K, v: CategoryCreate[K]) =>
     setForm((f) => ({ ...f, [k]: v }))
@@ -124,8 +137,8 @@ export function NewCategoryDialog({ nextSortOrder }: { nextSortOrder: number }) 
     create.mutate(form, {
       onSuccess: () => {
         toast.success('Category created', { description: form.label })
+        resetDraft()
         setOpen(false)
-        setForm({ ...EMPTY, sortOrder: nextSortOrder })
       },
       // Surface the gateway's validation text — "Create failed" alone leaves
       // the operator with no idea which field the API rejected.
@@ -137,7 +150,7 @@ export function NewCategoryDialog({ nextSortOrder }: { nextSortOrder: number }) 
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button size="lg">
           <Plus /> New category

@@ -213,6 +213,15 @@ export const configHandlers = [
     return new HttpResponse(null, { status: 204 })
   }),
 
+  http.get('*/admin/coach/categories/:id', ({ params }) => {
+    const found = CATEGORIES.find((c) => c.id === params.id)
+    if (!found) return new HttpResponse(null, { status: 404 })
+    return HttpResponse.json({
+      ...withReadiness(found),
+      questions: QUESTIONS[found.id] ?? [],
+    })
+  }),
+
   http.patch('*/admin/coach/categories/:id', async ({ params, request }) => {
     const body = (await request.json()) as Partial<CoachCategory>
     CATEGORIES = CATEGORIES.map((c) => (c.id === params.id ? { ...c, ...body } : c))

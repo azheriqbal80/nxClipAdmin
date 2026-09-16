@@ -26,6 +26,7 @@ export const publishingKeys = {
     100 is the gateway's hard maximum: `limit` > 100 is rejected with a 400
     ("limit must not be greater than 100"). */
 export const LATENCY_WINDOW = 100
+const STUCK_PAGE_SIZE = 100
 
 /**
  * Content that reached `published`, for the create→publish latency trend.
@@ -52,7 +53,7 @@ export function useStuckPublishingCount() {
     queryKey: publishingKeys.count(),
     queryFn: async () => {
       const res = await api.get<StuckList>('/admin/content', {
-        params: { status: 'publishing', limit: 50 },
+        params: { status: 'publishing', limit: STUCK_PAGE_SIZE },
         schema: stuckListSchema,
       })
       return res.items.length
@@ -80,7 +81,7 @@ export function useStuckPublishing() {
     queryKey: publishingKeys.list(),
     queryFn: ({ pageParam }) =>
       api.get<StuckList>('/admin/content', {
-        params: { status: 'publishing', cursor: pageParam, limit: 50 },
+        params: { status: 'publishing', cursor: pageParam, limit: STUCK_PAGE_SIZE },
         schema: stuckListSchema,
       }),
     initialPageParam: undefined as string | undefined,

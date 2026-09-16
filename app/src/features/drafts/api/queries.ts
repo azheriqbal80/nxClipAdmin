@@ -18,7 +18,7 @@ export const draftKeys = {
 }
 
 /** Gateway maximum — `limit` > 100 is rejected with a 400. */
-const PAGE = 50
+const PAGE = 100
 
 export function useDraftQueue(status: PreSubmissionStatus) {
   return useInfiniteQuery({

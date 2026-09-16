@@ -1,27 +1,16 @@
-import { useMemo, useState } from 'react'
-import { ArrowUpDown, ChevronDown, ChevronUp, ListFilter, Save } from 'lucide-react'
+import { useCallback, useMemo, useState } from 'react'
+import { ArrowUpDown, ChevronDown, ChevronUp, Save } from 'lucide-react'
+import type { ColumnDef } from '@tanstack/react-table'
 import { toast } from 'sonner'
 import { PageHeader } from '@/components/page-header'
 import { Panel, PanelHeader } from '@/components/panel'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Separator } from '@/components/ui/separator'
-import { SearchInput } from '@/components/search-input'
 import { TonePill } from '@/components/status-pill'
-import { DataTable, type Column } from '@/components/data-table'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { DataGrid, type FacetedFilterConfig } from '@/components/data-grid'
 import { CategoryEditor } from '../components/category-editor'
 import { NewCategoryDialog } from '../components/new-category-dialog'
-import { useCoachCategories, useReorderCategories } from '../api/queries'
+import { useCoachCategories, useCoachCategory, useReorderCategories } from '../api/queries'
 import {
   ONBOARDING_QUESTIONS,
   categoryReadiness,
@@ -31,100 +20,21 @@ import {
 type StatusFilter = 'active' | 'inactive'
 type ReadinessFilter = 'ready' | 'incomplete' | 'unknown'
 
-interface FilterOption<T extends string> {
-  label: string
-  value: T
-}
-
-const STATUS_OPTIONS: FilterOption<StatusFilter>[] = [
+const STATUS_OPTIONS: { label: string; value: StatusFilter }[] = [
   { label: 'Active', value: 'active' },
   { label: 'Inactive', value: 'inactive' },
 ]
 
-const ONBOARDING_OPTIONS: FilterOption<ReadinessFilter>[] = [
+const ONBOARDING_OPTIONS: { label: string; value: ReadinessFilter }[] = [
   { label: 'Ready', value: 'ready' },
   { label: 'Incomplete', value: 'incomplete' },
   { label: 'Unknown', value: 'unknown' },
 ]
 
-function CoachFilter<T extends string>({
-  title,
-  options,
-  selected,
-  counts,
-  onToggle,
-  onClear,
-  disabled,
-}: {
-  title: string
-  options: FilterOption<T>[]
-  selected: T[]
-  counts: Map<T, number>
-  onToggle: (value: T) => void
-  onClear: () => void
-  disabled?: boolean
-}) {
-  const active = new Set(selected)
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="toolbar" className="border-dashed" disabled={disabled}>
-          <ListFilter />
-          {title}
-          {active.size > 0 && (
-            <>
-              <Separator orientation="vertical" className="mx-1 h-4" />
-              <Badge variant="secondary" className="rounded px-1 font-normal">
-                {active.size}
-              </Badge>
-            </>
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-52">
-        <DropdownMenuLabel>{title}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {options.map((option) => (
-          <DropdownMenuCheckboxItem
-            key={option.value}
-            checked={active.has(option.value)}
-            onSelect={(event) => event.preventDefault()}
-            onCheckedChange={() => onToggle(option.value)}
-          >
-            <span className="flex-1">{option.label}</span>
-            <span className="ml-2 font-mono text-xs text-faint tabular-nums">
-              {counts.get(option.value) ?? 0}
-            </span>
-          </DropdownMenuCheckboxItem>
-        ))}
-        {active.size > 0 && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="justify-center text-xs" onSelect={onClear}>
-              Clear filter
-            </DropdownMenuItem>
-          </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
-}
-
-function toggleSelection<T extends string>(selected: T[], value: T) {
-  return selected.includes(value) ? selected.filter((v) => v !== value) : [...selected, value]
-}
-
-function searchableText(c: CoachCategory) {
-  return [
-    c.label,
-    c.slug,
-    c.openingMessage,
-    c.progressLabel,
-    categoryReadiness(c).state,
-    c.isActive ? 'active' : 'inactive',
-  ].join(' ')
-}
+const facetedFilters: FacetedFilterConfig[] = [
+  { columnId: 'status', title: 'Status', options: STATUS_OPTIONS },
+  { columnId: 'onboarding', title: 'Onboarding', options: ONBOARDING_OPTIONS },
+]
 
 /** Move controls replace the order number while reordering. Buttons rather than
     drag-and-drop: this is a short list, and arrows are keyboard-operable and
@@ -133,17 +43,27 @@ function orderColumn(
   reordering: boolean,
   rows: CoachCategory[],
   move: (index: number, delta: -1 | 1) => void,
-): Column<CoachCategory> {
+): ColumnDef<CoachCategory> {
   if (!reordering) {
     return {
+      id: 'order',
       header: 'Order',
-      align: 'right',
-      cell: (c) => <span className="font-mono text-xs text-faint">{c.sortOrder}</span>,
+      accessorFn: (c) => c.sortOrder,
+      cell: ({ row }) => (
+        <span className="block text-right font-mono text-xs text-faint">
+          {row.original.sortOrder}
+        </span>
+      ),
     }
   }
   return {
+    id: 'order',
     header: 'Order',
-    cell: (c) => {
+    enableSorting: false,
+    enableGlobalFilter: false,
+    enableHiding: false,
+    cell: ({ row }) => {
+      const c = row.original
       const i = rows.findIndex((r) => r.id === c.id)
       return (
         <span className="flex items-center gap-1">
@@ -172,13 +92,26 @@ function orderColumn(
   }
 }
 
-const restColumns: Column<CoachCategory>[] = [
-  { header: 'Category', cell: (c) => <span className="font-medium text-foreground">{c.label}</span> },
-  { header: 'Slug', cell: (c) => <span className="font-mono text-xs text-muted-foreground">{c.slug}</span> },
+const restColumns: ColumnDef<CoachCategory>[] = [
   {
+    id: 'category',
+    header: 'Category',
+    accessorFn: (c) => [c.label, c.openingMessage, c.progressLabel].join(' '),
+    cell: ({ row }) => <span className="font-medium text-foreground">{row.original.label}</span>,
+  },
+  {
+    accessorKey: 'slug',
+    header: 'Slug',
+    cell: ({ row }) => (
+      <span className="font-mono text-xs text-muted-foreground">{row.original.slug}</span>
+    ),
+  },
+  {
+    id: 'questions',
     header: 'Questions',
-    align: 'right',
-    cell: (c) => {
+    accessorFn: (c) => c.activeQuestionCount ?? c.questionCount,
+    cell: ({ row }) => {
+      const c = row.original
       const active = c.activeQuestionCount ?? c.questionCount
       /**
        * `questionCount` counts inactive rows, `activeQuestionCount` does not, so
@@ -189,7 +122,7 @@ const restColumns: Column<CoachCategory>[] = [
        */
       const off = c.activeQuestionCount !== undefined ? c.questionCount - c.activeQuestionCount : 0
       return (
-        <span className="tabular-nums">
+        <span className="block text-right tabular-nums">
           {active}
           <span className="text-faint">/{c.requiredQuestionCount ?? ONBOARDING_QUESTIONS}</span>
           {off > 0 && (
@@ -202,10 +135,14 @@ const restColumns: Column<CoachCategory>[] = [
     },
   },
   {
+    id: 'onboarding',
     // Onboarding needs Q1–Q5 active. A category missing any of them still looks
     // fine in the list otherwise, so the gap has to be its own column.
     header: 'Onboarding',
-    cell: (c) => {
+    accessorFn: (c) => categoryReadiness(c).state,
+    filterFn: 'arrIncludesSome',
+    cell: ({ row }) => {
+      const c = row.original
       const r = categoryReadiness(c)
       if (r.state === 'ready') return <TonePill tone="success">Ready</TonePill>
       if (r.state === 'unknown') return <span className="text-caption text-faint">—</span>
@@ -222,10 +159,16 @@ const restColumns: Column<CoachCategory>[] = [
     },
   },
   {
+    id: 'status',
     header: 'Status',
-    cell: (c) => (
+    accessorFn: (c) => (c.isActive ? 'active' : 'inactive'),
+    filterFn: 'arrIncludesSome',
+    cell: ({ row }) => {
+      const c = row.original
+      return (
       <TonePill tone={c.isActive ? 'success' : 'neutral'}>{c.isActive ? 'Active' : 'Inactive'}</TonePill>
-    ),
+      )
+    },
   },
 ]
 
@@ -234,58 +177,27 @@ export function CoachPage() {
   const reorder = useReorderCategories()
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [draft, setDraft] = useState<CoachCategory[] | null>(null)
-  const [search, setSearch] = useState('')
-  const [statusFilters, setStatusFilters] = useState<StatusFilter[]>([])
-  const [readinessFilters, setReadinessFilters] = useState<ReadinessFilter[]>([])
   const server = [...(categories.data ?? [])].sort((a, b) => a.sortOrder - b.sortOrder)
 
   // While reordering, the table renders a local draft so arrows respond
   // immediately and the whole order commits in one call.
   const reordering = draft !== null
   const items = draft ?? server
-  const filteredItems = useMemo(() => {
-    if (reordering) return items
-
-    const q = search.trim().toLowerCase()
-    return items.filter((c) => {
-      const status = c.isActive ? 'active' : 'inactive'
-      const readiness = categoryReadiness(c).state
-
-      if (statusFilters.length > 0 && !statusFilters.includes(status)) return false
-      if (readinessFilters.length > 0 && !readinessFilters.includes(readiness)) return false
-      if (q && !searchableText(c).toLowerCase().includes(q)) return false
-
-      return true
-    })
-  }, [items, readinessFilters, reordering, search, statusFilters])
-  const current = filteredItems.find((c) => c.id === selectedId) ?? null
-
-  const statusCounts = useMemo(() => {
-    const counts = new Map<StatusFilter, number>()
-    for (const c of items) {
-      const status = c.isActive ? 'active' : 'inactive'
-      counts.set(status, (counts.get(status) ?? 0) + 1)
-    }
-    return counts
-  }, [items])
-
-  const readinessCounts = useMemo(() => {
-    const counts = new Map<ReadinessFilter, number>()
-    for (const c of items) {
-      const readiness = categoryReadiness(c).state
-      counts.set(readiness, (counts.get(readiness) ?? 0) + 1)
-    }
-    return counts
-  }, [items])
-
-  const move = (index: number, delta: -1 | 1) =>
+  const move = useCallback((index: number, delta: -1 | 1) =>
     setDraft((rows) => {
       const list = [...(rows ?? server)]
       const to = index + delta
       if (to < 0 || to >= list.length) return list
       ;[list[index], list[to]] = [list[to], list[index]]
       return list
-    })
+    }), [server])
+  const columns = useMemo(
+    () => [orderColumn(reordering, items, move), ...restColumns],
+    [items, move, reordering],
+  )
+  const selectedFromList = items.find((c) => c.id === selectedId) ?? null
+  const categoryDetail = useCoachCategory(selectedFromList?.id ?? null)
+  const current = categoryDetail.data ?? selectedFromList
 
   const orderDirty =
     reordering && draft.some((c, i) => c.id !== server[i]?.id)
@@ -339,9 +251,6 @@ export function CoachPage() {
                 onClick={() => {
                   setDraft(server)
                   setSelectedId(null)
-                  setSearch('')
-                  setStatusFilters([])
-                  setReadinessFilters([])
                 }}
                 disabled={server.length < 2}
               >
@@ -381,9 +290,7 @@ export function CoachPage() {
             title={
               categories.isLoading
                 ? 'Loading…'
-                : filteredItems.length === items.length
-                  ? `${items.length} categories`
-                  : `${filteredItems.length} of ${items.length} categories`
+                : `${items.length} categories`
             }
           />
           {categories.isLoading ? (
@@ -393,50 +300,25 @@ export function CoachPage() {
           ) : categories.isError ? (
             <div className="p-10 text-center text-sm text-destructive">Failed to load categories.</div>
           ) : (
-            <>
-              <div className="flex flex-wrap items-center gap-2 border-b border-border px-5 py-3">
-                <SearchInput
-                  placeholder="Search category, slug or coach copy…"
-                  className="w-72"
-                  value={search}
-                  disabled={reordering}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-                <CoachFilter
-                  title="Status"
-                  options={STATUS_OPTIONS}
-                  selected={statusFilters}
-                  counts={statusCounts}
-                  disabled={reordering}
-                  onToggle={(value) => setStatusFilters((selected) => toggleSelection(selected, value))}
-                  onClear={() => setStatusFilters([])}
-                />
-                <CoachFilter
-                  title="Onboarding"
-                  options={ONBOARDING_OPTIONS}
-                  selected={readinessFilters}
-                  counts={readinessCounts}
-                  disabled={reordering}
-                  onToggle={(value) => setReadinessFilters((selected) => toggleSelection(selected, value))}
-                  onClear={() => setReadinessFilters([])}
-                />
-              </div>
-              <DataTable
-                columns={[orderColumn(reordering, items, move), ...restColumns]}
-                rows={filteredItems}
-                rowKey={(c) => c.id}
-                selectedKey={current?.id}
+            <div className="border-t border-border p-5">
+              <DataGrid
+                data={items}
+                columns={columns}
+                getRowId={(c) => c.id}
+                searchable={!reordering}
+                searchPlaceholder="Search category, slug or coach copy…"
+                facetedFilters={reordering ? [] : facetedFilters}
+                pageSize={100}
+                isLoading={categories.isLoading}
+                isError={categories.isError}
+                emptyMessage="No coach categories match your filters."
+                selectedRowId={current?.id}
                 // Row selection is suspended while reordering: a click there means
                 // "move this", not "edit this".
                 onRowClick={reordering ? undefined : (c) => setSelectedId(c.id)}
                 getRowActionLabel={(c) => `Edit ${c.label}`}
-                empty={
-                  <div className="py-6 text-muted-foreground">
-                    {items.length === 0 ? 'No coach categories.' : 'No coach categories match your filters.'}
-                  </div>
-                }
               />
-            </>
+            </div>
           )}
         </Panel>
 

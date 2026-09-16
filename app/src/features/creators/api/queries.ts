@@ -18,13 +18,16 @@ export const creatorKeys = {
   detail: (id: string) => [...creatorKeys.all, 'detail', id] as const,
 }
 
+/** Keep cursor-backed directory tables complete while staying within gateway caps. */
+const DIRECTORY_PAGE_SIZE = 100
+
 export function useCreators(q: string, status: CreatorStatusFilter) {
   return useInfiniteQuery({
     queryKey: creatorKeys.list(q, status),
     queryFn: ({ pageParam }) =>
       api.get<CreatorList>('/admin/users', {
         // Larger page — the DataGrid does search / filter / pagination client-side.
-        params: { q: q || undefined, status, cursor: pageParam, limit: 50 },
+        params: { q: q || undefined, status, cursor: pageParam, limit: DIRECTORY_PAGE_SIZE },
         schema: creatorListSchema,
       }),
     initialPageParam: undefined as string | undefined,

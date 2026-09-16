@@ -6,6 +6,7 @@ import { UserAvatar } from '@/components/user-avatar'
 import { DataGrid, type FacetedFilterConfig } from '@/components/data-grid'
 import { useUserNames } from '@/hooks/use-user-names'
 import { useRevealOnSelect } from '@/hooks/use-reveal-on-select'
+import { useAutoFetchNextPages } from '@/hooks/use-auto-fetch-next-pages'
 import { mergeDefined } from '@/lib/merge-defined'
 import { formatTableDate } from '@/lib/date-format'
 import type { ContentStatus } from '@/domain/content'
@@ -129,6 +130,8 @@ export function DraftsPage() {
   const drafts = useDraftQueue('draft')
   const processing = useDraftQueue('processing')
   const stuck = useStuckProcessingCount()
+  useAutoFetchNextPages(drafts)
+  useAutoFetchNextPages(processing)
 
   const users = useUserNames()
   const columns = useMemo(() => buildColumns(users.resolve), [users.resolve])

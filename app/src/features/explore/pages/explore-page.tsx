@@ -9,6 +9,7 @@ import { DataGrid, type FacetedFilterConfig } from '@/components/data-grid'
 import { TonePill } from '@/components/status-pill'
 import { useUserNames } from '@/hooks/use-user-names'
 import { useRevealOnSelect } from '@/hooks/use-reveal-on-select'
+import { useAutoFetchNextPages } from '@/hooks/use-auto-fetch-next-pages'
 import { ProjectionInspector } from '../components/projection-inspector'
 import { WesScatterChart } from '../components/wes-scatter-chart'
 import { engagementAudit } from '../api/analytics'
@@ -82,12 +83,13 @@ function buildColumns(resolveUser: (id: string) => string): ColumnDef<Projection
 
 export function ExplorePage() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const { data, isLoading, isError } = useExplore('wes')
+  const explore = useExplore('wes')
+  useAutoFetchNextPages(explore)
 
   const users = useUserNames()
   const columns = useMemo(() => buildColumns(users.resolve), [users.resolve])
 
-  const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data?.pages])
+  const items = useMemo(() => explore.data?.pages.flatMap((p) => p.items) ?? [], [explore.data?.pages])
   const facetedFilters = useMemo<FacetedFilterConfig[]>(() => {
     const contentTypes = Array.from(new Set(items.map((p) => p.contentType))).sort()
     const statuses = Array.from(new Set(items.map((p) => p.socialRollup))).sort()
@@ -126,7 +128,7 @@ export function ExplorePage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        {isLoading ? (
+        {explore.isLoading ? (
           Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-40 rounded-xl" />)
         ) : (
           <>
@@ -161,7 +163,7 @@ export function ExplorePage() {
         )}
       </div>
 
-      <WesScatterChart audit={audit} loading={isLoading} error={isError} />
+      <WesScatterChart audit={audit} loading={explore.isLoading} error={explore.isError} />
 
       <div className={selected ? 'grid gap-4 lg:grid-cols-[minmax(0,1fr)_384px] lg:items-start' : ''}>
         <DataGrid
@@ -173,8 +175,8 @@ export function ExplorePage() {
           facetedFilters={facetedFilters}
           pageSize={10}
           initialSorting={[{ id: 'wesScore', desc: true }]}
-          isLoading={isLoading}
-          isError={isError}
+          isLoading={explore.isLoading}
+          isError={explore.isError}
           emptyMessage="No projections here."
           onRowClick={(p) => setSelectedId(p.contentId)}
           getRowActionLabel={(p) => `Inspect ${projectionTitle(p)}`}

@@ -7,6 +7,8 @@
 >
 > **API surface verified live** against the production gateway on 2026-08-07 (seeded admin, real probes).
 > Live status + open backend items are tracked in the single status report: `reports/nxclip-admin-report.md`.
+> Latest backend handoff `documentsProvided/admin-api-reference.md` reviewed on 2026-09-16; the `/admin/*`
+> route contract still matches this file exactly.
 
 ---
 
@@ -52,6 +54,8 @@ Frontend env (`app/.env` — optional; the app defaults to same-origin + the dev
 ```env
 # Point the client at a cross-origin gateway (requires CORS on the gateway).
 VITE_API_URL=https://api-gateway-216098834386.us-central1.run.app
+# Backend docs also name this alias; the current admin SPA reads VITE_API_URL.
+VITE_API_GATEWAY_URL=https://api-gateway-216098834386.us-central1.run.app
 ```
 
 All paths below are relative to the base (e.g. `POST {base}/auth/login`, `GET {base}/admin/users`).
@@ -143,7 +147,7 @@ Paths are the same on local and GCP; only the host changes.
 | GET | `/admin/costs/summary?from=&to=` | ai | Cost aggregates — **currently 500 (BE-1)** |
 | GET | `/admin/coach/categories?activeOnly=` | ai | Niche categories + readiness (`isReady`, `missingQuestionNumbers`) |
 | POST | `/admin/coach/categories` | ai | Create category |
-| GET | `/admin/coach/categories/:id` | ai | Category detail + embedded questions. **Unused by the FE** — measured 2026-09-09 it adds only `questions` over a list row, so it replaces `GET .../questions` 1:1 rather than saving a call. See the note below §2.5. |
+| GET | `/admin/coach/categories/:id` | ai | Category detail + embedded questions. **Consumed 2026-09-16** when opening the coach editor so edits start from a fresh category snapshot; embedded questions are not used for the bulk editor because inactive coverage is still verified through `GET .../questions?includeInactive=true`. |
 | PATCH | `/admin/coach/categories/:id` | ai | Update / deactivate category |
 | PATCH | `/admin/coach/categories/reorder` | ai | Bulk `{ items: [{ id, sortOrder }] }` for picker order. **Consumed 2026-09-09** — the coach page's Reorder mode sends the whole order renumbered `1..n`, because a swap cannot be expressed as two independent `PATCH /:id` writes without briefly colliding on a number. |
 | GET | `/admin/coach/categories/:id/questions?includeInactive=` | ai | Questions for category |
@@ -194,13 +198,12 @@ assignment of `User.Plan` stays on Identity — admin edits **entitlement number
 **Category:** `slug`, `label`, `openingMessage`, `progressLabel`, `sortOrder`, `isActive` (+ read-only
 `id`, `questionCount`, `createdAt`, `updatedAt`).
 
-**`GET /admin/coach/categories/:id` is NOT a round-trip saving.** Measured live 2026-09-09:
-it adds exactly one field over a list row (`questions`), and the list already carries every
-category field including readiness. So it replaces `GET .../questions` one-for-one rather
-than collapsing two calls into one. It is also unsafe to adopt for the editor: live has **no
-inactive questions anywhere**, so whether its embedded `questions` honours `includeInactive`
-cannot be established — and the editor needs the complete set, because that completeness is what
-makes the bulk save safe. Left unused deliberately.
+**`GET /admin/coach/categories/:id` is used as the editor's fresh category read.** Measured live
+2026-09-09 it adds exactly one field over a list row (`questions`), so it does not replace the
+question-bank fetch. The editor still reads questions through
+`GET .../questions?includeInactive=true`, because the bulk save must hold inactive rows too. The
+detail read is valuable for category copy/status freshness when opening the side panel, not as a
+round-trip reduction.
 
 **Category readiness fields** — present on both the list and the new detail route, verified live
 2026-08-29. **All six are consumed** (coach page, 2026-09-09): `activeQuestionCount` over
@@ -245,6 +248,9 @@ the slug's own bounds were mirrored, so an over-long label reached the API as an
 **Question:** `questionNumber`, `message`, `chips[]`, `multiSelect`, `isActive` (+ read-only `id`,
 `categoryId`, timestamps).
 Prefer soft-deactivate (`isActive: false`) over hard delete to avoid breaking in-flight sessions.
+`PATCH /admin/coach/questions/:id` is consumed by each question row's Active switch; text, chips,
+question order, and multi-select still use the bulk `PUT /admin/coach/categories/:id/questions` save
+so draft edits commit together.
 
 ### 2.6 Known response shapes (observed live 2026-08-07)
 
@@ -461,6 +467,8 @@ Desktop-first, high-density ops console — sophisticated, high-contrast, struct
 
 - **This file is the canonical admin API + spec doc.** The backend's earlier `admin-api-reference.md` and
   `admin-panel-beta-apis.md` were merged here on 2026-08-07 and removed from `NewDocs/`.
+- **Latest backend handoff reviewed:** `documentsProvided/admin-api-reference.md` on 2026-09-16. Its
+  `/admin/*` route map is identical to §2.3; this file remains the admin panel API source of truth.
 - **Process for future backend docs:** when the backend team sends a new API doc, (1) test the changes
   against the admin app, (2) merge the confirmed changes into this file, (3) note them in the changelog
   below, (4) remove the standalone doc so this stays the only source.
@@ -469,6 +477,13 @@ Desktop-first, high-density ops console — sophisticated, high-contrast, struct
   (appendix). It references this file as the contract.
 
 ### Changelog
+- **2026-09-16** — AI Coach now consumes `GET /admin/coach/categories/:id` for fresh editor category
+  detail and `PATCH /admin/coach/questions/:id` through each question row's Active switch. The
+  standalone `GET /admin/coach/questions/:id` remains intentionally unused pending a separate UX decision.
+- **2026-09-16** — Reviewed latest backend-provided `documentsProvided/admin-api-reference.md` against this
+  file. The `/admin/*` route map, seeded admin credentials, gateway base URL, plan/coach/content/users/jobs
+  endpoints, and `users/stats` contract are aligned. Added the backend-documented
+  `VITE_API_GATEWAY_URL` alias note while preserving `VITE_API_URL` as the variable the current SPA reads.
 - **2026-08-07** — Merged backend `admin-api-reference.md` + `admin-panel-beta-apis.md`. Updated all module
   statuses from "missing/build" to live-verified. Added §2 Admin API Reference (base URLs, auth, route map,
   plan/coach shapes, observed response shapes) and §2.8 open items BE-1…BE-9.

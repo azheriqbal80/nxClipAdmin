@@ -9,6 +9,7 @@ import { UserAvatar } from '@/components/user-avatar'
 import { DataGrid, type FacetedFilterConfig } from '@/components/data-grid'
 import { useUserNames } from '@/hooks/use-user-names'
 import { useRevealOnSelect } from '@/hooks/use-reveal-on-select'
+import { useAutoFetchNextPages } from '@/hooks/use-auto-fetch-next-pages'
 import { formatTableDate } from '@/lib/date-format'
 import { PublishingInspector } from '../components/publishing-inspector'
 import { PublishLatencyChart } from '../components/publish-latency-chart'
@@ -108,7 +109,8 @@ function buildColumns(resolveUser: (id: string) => string): ColumnDef<StuckItem>
 
 export function PublishingPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const { data, isLoading, isError } = useStuckPublishing()
+  const stuck = useStuckPublishing()
+  useAutoFetchNextPages(stuck)
   // Items that made it through — the stuck list has no publishedAt by definition.
   const published = usePublishedContent()
   const latency = latencySeries(published.data?.items ?? [])
@@ -116,7 +118,7 @@ export function PublishingPage() {
   const users = useUserNames()
   const columns = useMemo(() => buildColumns(users.resolve), [users.resolve])
 
-  const all = data?.pages.flatMap((p) => p.items) ?? []
+  const all = stuck.data?.pages.flatMap((p) => p.items) ?? []
   const selected = all.find((i) => i.id === selectedId) ?? null
   const inspectorRef = useRef<HTMLDivElement>(null)
   useRevealOnSelect(inspectorRef, selected?.id ?? null)
@@ -134,7 +136,7 @@ export function PublishingPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        {isLoading ? (
+        {stuck.isLoading ? (
           Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-40 rounded-xl" />)
         ) : (
           <>
@@ -176,7 +178,7 @@ export function PublishingPage() {
           loading={published.isLoading}
           error={published.isError}
         />
-        <StuckAgeChart items={all} loading={isLoading} error={isError} />
+        <StuckAgeChart items={all} loading={stuck.isLoading} error={stuck.isError} />
       </div>
 
       <div className={selected ? 'grid gap-4 lg:grid-cols-[minmax(0,1fr)_384px] lg:items-start' : ''}>
@@ -189,8 +191,8 @@ export function PublishingPage() {
           facetedFilters={facetedFilters}
           pageSize={10}
           initialSorting={[{ id: 'stuckFor', desc: true }]}
-          isLoading={isLoading}
-          isError={isError}
+          isLoading={stuck.isLoading}
+          isError={stuck.isError}
           emptyMessage="Nothing stuck in publishing."
           onRowClick={(i) => setSelectedId(i.id)}
           getRowActionLabel={(i) => `Inspect ${stuckTitle(i)}`}
