@@ -90,7 +90,7 @@ export type PlanCap = z.infer<typeof planCapSchema>
 /** Slim job rows for per-creator usage: who ran what, when. */
 const usageJobSchema = z.object({
   id: z.string(),
-  userId: z.string(),
+  userId: z.string().nullable(),
   queueName: z.string(),
   createdAt: z.string(),
 })

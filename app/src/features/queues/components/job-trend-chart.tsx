@@ -37,7 +37,12 @@ function TrendBars({ buckets }: { buckets: DailyJobBucket[] }) {
           height={28}
           iconType="circle"
           iconSize={8}
-          wrapperStyle={{ fontSize: 11, color: 'var(--muted-foreground)' }}
+          wrapperStyle={{
+            boxSizing: 'border-box',
+            color: 'var(--muted-foreground)',
+            fontSize: 11,
+            paddingLeft: 16,
+          }}
         />
         {/* 2px surface gap between stacked segments; rounded top on the last one only */}
         <Bar

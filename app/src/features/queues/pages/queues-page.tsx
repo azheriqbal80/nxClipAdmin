@@ -21,7 +21,7 @@ import { pipelineTiming } from '../api/analytics'
 import { useQueues, useFailedJobs, useCostSummary, useJobWindow } from '../api/queries'
 import { QUEUE_NAMES, fmtUsd, queueLabel, queueDepth, type Job } from '../api/schemas'
 
-function buildColumns(resolveUser: (id: string) => string): ColumnDef<Job>[] {
+function buildColumns(resolveUser: (id: string | null | undefined) => string): ColumnDef<Job>[] {
   return [
     {
       id: 'queue',
@@ -42,10 +42,14 @@ function buildColumns(resolveUser: (id: string) => string): ColumnDef<Job>[] {
       accessorFn: (j) => resolveUser(j.userId),
       cell: ({ row }) => {
         const name = resolveUser(row.original.userId)
+        const hasUser = !!row.original.userId
         return (
           <div className="flex items-center gap-2">
             <UserAvatar name={name} size="sm" />
-            <span className="text-foreground/90">{name}</span>
+            <div className="min-w-0">
+              <span className="block truncate text-foreground/90">{name}</span>
+              {!hasUser && <span className="block text-caption text-faint">No user ID</span>}
+            </div>
           </div>
         )
       },

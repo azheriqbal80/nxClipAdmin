@@ -84,7 +84,12 @@ export function ContentVolumeChart({
                 height={28}
                 iconType="circle"
                 iconSize={8}
-                wrapperStyle={{ fontSize: 11, color: 'var(--muted-foreground)' }}
+                wrapperStyle={{
+                  boxSizing: 'border-box',
+                  color: 'var(--muted-foreground)',
+                  fontSize: 11,
+                  paddingLeft: 16,
+                }}
               />
               {/* Only bands that occur get a series — otherwise the legend
                   advertises outcomes this platform has never produced. */}

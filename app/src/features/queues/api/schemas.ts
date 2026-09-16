@@ -33,7 +33,7 @@ export const jobSchema = z.object({
   queueName: z.string(),
   bullJobId: z.string().nullable(),
   contentId: z.string().nullable(),
-  userId: z.string(),
+  userId: z.string().nullable(),
   status: z.string(),
   promptVersion: z.string().nullable(),
   inputPayload: z.unknown().nullable(),

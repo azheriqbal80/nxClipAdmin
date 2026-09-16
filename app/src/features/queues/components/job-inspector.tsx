@@ -90,6 +90,7 @@ export function JobInspector({
   // No per-call callbacks: a retried job leaves `status=failed`, unmounting
   // this panel before React Query would run them. Toasts live on useRetryJob.
   const onRetry = () => retry.mutate(job)
+  const displayUser = userName ?? (job.userId ? job.userId.slice(0, 8) : 'System job')
 
   return (
     <Panel className="flex h-full flex-col overflow-hidden">
@@ -118,10 +119,10 @@ export function JobInspector({
 
         <Field label="Requested by">
           <div className="flex items-center gap-2">
-            <UserAvatar name={userName ?? job.userId.slice(0, 8)} size="sm" />
+            <UserAvatar name={displayUser} size="sm" />
             <div className="min-w-0">
-              <div className="truncate text-sm text-foreground">{userName ?? job.userId.slice(0, 8)}</div>
-              <div className="truncate font-mono text-caption text-faint">{job.userId}</div>
+              <div className="truncate text-sm text-foreground">{displayUser}</div>
+              <div className="truncate font-mono text-caption text-faint">{job.userId ?? 'No user ID'}</div>
             </div>
           </div>
         </Field>

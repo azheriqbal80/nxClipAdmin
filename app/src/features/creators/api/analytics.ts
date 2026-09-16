@@ -60,6 +60,7 @@ export function planHeadroom(
   for (const j of jobs) {
     if (j.queueName !== CAPPED_QUEUE) continue
     if (bucketKey(j.createdAt, 'day') !== today) continue
+    if (!j.userId) continue
     usedByUser.set(j.userId, (usedByUser.get(j.userId) ?? 0) + 1)
     countedToday += 1
   }

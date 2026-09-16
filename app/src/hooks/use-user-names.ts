@@ -33,7 +33,10 @@ export function useUserNames() {
     for (const u of query.data?.items ?? []) {
       map.set(u.id, u.displayName?.trim() || u.username?.trim() || u.id.slice(0, 8))
     }
-    return (userId: string) => map.get(userId) ?? userId.slice(0, 8)
+    return (userId: string | null | undefined) => {
+      if (!userId) return 'System job'
+      return map.get(userId) ?? userId.slice(0, 8)
+    }
   }, [query.data])
 
   return { resolve, isLoading: query.isLoading }
