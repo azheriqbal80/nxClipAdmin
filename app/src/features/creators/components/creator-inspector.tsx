@@ -3,7 +3,10 @@ import {
   Ban,
   CheckCircle2,
   RotateCcw,
-  ShieldPlus,
+  ShieldCheck,
+  ShieldMinus,
+  UserCheck,
+  UserMinus,
   UserRound,
   X,
 } from 'lucide-react'
@@ -18,9 +21,40 @@ import { UserAvatar } from '@/components/user-avatar'
 import {
   useSetCreatorActive,
   useResetOnboarding,
-  usePromoteToAdmin,
+  useSetCreatorRole,
+  type CreatorRole,
+  type CreatorRoleAction,
 } from '../api/queries'
 import { PLAN_TONE, isCreatorAdmin, type Creator } from '../api/schemas'
+
+const ROLE_CONTROLS: Array<{
+  role: CreatorRole
+  label: string
+  description: string
+  grantLabel: string
+  revokeLabel: string
+  GrantIcon: typeof ShieldCheck
+  RevokeIcon: typeof ShieldMinus
+}> = [
+  {
+    role: 'admin',
+    label: 'Admin access',
+    description: 'Can open this console and use protected admin routes.',
+    grantLabel: 'Grant admin',
+    revokeLabel: 'Revoke admin',
+    GrantIcon: ShieldCheck,
+    RevokeIcon: ShieldMinus,
+  },
+  {
+    role: 'creator',
+    label: 'Creator role',
+    description: 'Keeps this account eligible for creator-facing app access.',
+    grantLabel: 'Grant creator',
+    revokeLabel: 'Revoke creator',
+    GrantIcon: UserCheck,
+    RevokeIcon: UserMinus,
+  },
+]
 
 export function CreatorInspector({
   creator,
@@ -31,7 +65,7 @@ export function CreatorInspector({
 }) {
   const setActive = useSetCreatorActive()
   const resetOnboarding = useResetOnboarding()
-  const promote = usePromoteToAdmin()
+  const setRole = useSetCreatorRole()
 
   if (!creator) {
     return (
@@ -46,8 +80,9 @@ export function CreatorInspector({
     )
   }
 
-  const busy = setActive.isPending || resetOnboarding.isPending || promote.isPending
+  const busy = setActive.isPending || resetOnboarding.isPending || setRole.isPending
   const admin = isCreatorAdmin(creator)
+  const hasRole = (role: CreatorRole) => creator.roles.some((r) => r.toLowerCase() === role)
 
   const onToggleActive = () =>
     setActive.mutate(
@@ -67,11 +102,17 @@ export function CreatorInspector({
       onError: () => toast.error('Reset failed'),
     })
 
-  const onPromote = () =>
-    promote.mutate(creator, {
-      onSuccess: () => toast.success('Promoted to admin', { description: creator.displayName }),
-      onError: () => toast.error('Promote failed'),
-    })
+  const onRoleChange = (role: CreatorRole, action: CreatorRoleAction) =>
+    setRole.mutate(
+      { creator, role, action },
+      {
+        onSuccess: () =>
+          toast.success(action === 'grant' ? 'Role granted' : 'Role revoked', {
+            description: `${creator.displayName} · ${role}`,
+          }),
+        onError: () => toast.error('Role update failed'),
+      },
+    )
 
   return (
     <Panel className="flex h-full flex-col overflow-hidden">
@@ -108,12 +149,48 @@ export function CreatorInspector({
         </div>
 
         <Field label="Roles">
-          <div className="flex flex-wrap gap-1.5">
-            {creator.roles.map((r) => (
-              <Badge key={r} variant={r === 'admin' ? 'accent' : 'secondary'} className="capitalize">
-                {r}
-              </Badge>
-            ))}
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-1.5">
+              {creator.roles.map((r) => (
+                <Badge key={r} variant={r === 'admin' ? 'accent' : 'secondary'} className="capitalize">
+                  {r}
+                </Badge>
+              ))}
+              {!creator.roles.length && <Badge variant="neutral">No roles</Badge>}
+            </div>
+            <div className="space-y-2">
+              {ROLE_CONTROLS.map((item) => {
+                const granted = hasRole(item.role)
+                const Icon = granted ? item.RevokeIcon : item.GrantIcon
+                return (
+                  <div
+                    key={item.role}
+                    className="flex items-center gap-3 rounded-lg border border-border bg-secondary/40 p-3"
+                  >
+                    <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-md bg-elevated text-muted-foreground">
+                      <Icon className="size-4" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm font-medium text-foreground">{item.label}</span>
+                        <Badge variant={granted ? 'success' : 'neutral'} size="sm">
+                          {granted ? 'Granted' : 'Missing'}
+                        </Badge>
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">{item.description}</p>
+                    </div>
+                    <Button
+                      variant={granted ? 'destructive' : 'outline'}
+                      size="sm"
+                      onClick={() => onRoleChange(item.role, granted ? 'revoke' : 'grant')}
+                      disabled={busy}
+                    >
+                      {granted ? item.revokeLabel : item.grantLabel}
+                    </Button>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </Field>
 
@@ -156,10 +233,10 @@ export function CreatorInspector({
             <RotateCcw /> Reset onboarding
           </Button>
         </div>
-        {!admin && (
-          <Button variant="outline" className="w-full" onClick={onPromote} disabled={busy}>
-            <ShieldPlus /> Promote to admin
-          </Button>
+        {admin && (
+          <div className="text-caption text-muted-foreground">
+            Admin role is managed in the Roles section above.
+          </div>
         )}
       </div>
     </Panel>

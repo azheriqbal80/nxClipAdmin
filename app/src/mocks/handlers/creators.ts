@@ -162,12 +162,29 @@ export const creatorsHandlers = [
     return new HttpResponse(null, { status: 204 })
   }),
 
-  http.post('*/admin/users/:id/roles', ({ params }) => {
-    CREATORS = CREATORS.map((c) =>
-      c.id === params.id && !c.roles.includes('admin')
-        ? { ...c, roles: [...c.roles, 'admin'] }
-        : c,
-    )
+  http.post('*/admin/users/:id/roles', async ({ params, request }) => {
+    const body = (await request.json().catch(() => ({}))) as {
+      role?: string
+      action?: string
+    }
+    if (body.role !== 'admin' && body.role !== 'creator') {
+      return HttpResponse.json({ message: 'Role must be admin or creator' }, { status: 400 })
+    }
+    if (body.action !== 'grant' && body.action !== 'revoke') {
+      return HttpResponse.json({ message: "Action must be 'grant' or 'revoke'" }, { status: 400 })
+    }
+    const role = body.role
+    const action = body.action
+    const creator = CREATORS.find((c) => c.id === params.id)
+    if (!creator) return new HttpResponse(null, { status: 404 })
+
+    CREATORS = CREATORS.map((c) => {
+      if (c.id !== params.id) return c
+      const roles = new Set(c.roles)
+      if (action === 'grant') roles.add(role)
+      else roles.delete(role)
+      return { ...c, roles: [...roles] }
+    })
     return new HttpResponse(null, { status: 204 })
   }),
 ]

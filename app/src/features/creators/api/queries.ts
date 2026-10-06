@@ -10,6 +10,8 @@ import {
 } from './schemas'
 
 export type CreatorStatusFilter = 'all' | 'active' | 'suspended'
+export type CreatorRole = 'admin' | 'creator'
+export type CreatorRoleAction = 'grant' | 'revoke'
 
 export const creatorKeys = {
   all: ['creators'] as const,
@@ -66,12 +68,20 @@ export function useResetOnboarding() {
   })
 }
 
-export function usePromoteToAdmin() {
+export function useSetCreatorRole() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (creator: Creator) =>
+    mutationFn: ({
+      creator,
+      role,
+      action,
+    }: {
+      creator: Creator
+      role: CreatorRole
+      action: CreatorRoleAction
+    }) =>
       api.post<void>(`/admin/users/${creator.id}/roles`, {
-        body: { role: 'admin', action: 'grant' },
+        body: { role, action },
       }),
     onSuccess: () => qc.invalidateQueries({ queryKey: creatorKeys.all }),
   })
