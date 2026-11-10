@@ -1,10 +1,9 @@
 /* Shared shell structure. Visual values come from styles/index.css on every route. */
 [data-slot="app-topbar"] { background: var(--sidebar); padding-inline: 26px; }
 [data-slot="app-topbar"] > nav { font-size: var(--text-ui); }
-.shell-workspace { display: flex; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: var(--radius-lg); margin: 14px 16px 22px; padding: 11px 10px; }
-.shell-workspace > span { display: grid; place-items: center; width: 31px; height: 31px; border: 1px solid var(--border); background: var(--secondary); border-radius: var(--radius-lg); }
-.shell-workspace strong { display: block; font-weight: 500; font-size: var(--text-xs); }
-.shell-workspace small { display: block; font-size: var(--text-caption); color: var(--muted-foreground); }
+.shell-brand-link { display: inline-flex; align-items: center; min-width: 0; border-radius: var(--radius-lg); outline: none; }
+.shell-brand-link:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent); }
+.shell-brand-link:hover span { color: var(--foreground); }
 .shell-account { display: flex; gap: 9px; align-items: center; border-top: 1px solid var(--border); margin: 16px; padding-top: 16px; }
 .shell-account strong { display: block; font-size: var(--text-xs); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .shell-account small { display: block; font-size: var(--text-caption); color: var(--muted-foreground); }

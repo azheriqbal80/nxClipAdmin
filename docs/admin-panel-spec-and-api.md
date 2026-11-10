@@ -7,12 +7,12 @@
 >
 > **API surface verified live** against the production gateway on 2026-08-07 (seeded admin, real probes).
 > Live status + open backend items are tracked in the single status report: `reports/nxclip-admin-report.md`.
-> Latest backend handoff `documentsProvided/admin-api-reference.md` reviewed on 2026-09-16; the `/admin/*`
-> route contract still matches this file exactly.
+> Latest backend handoff `admin-api-reference.md` reviewed on 2026-11-08; the `/admin/*` route contract
+> still matches this file exactly. The handoff also adds the public `/auth/google/config` contract.
 
 ---
 
-## 1. Status at a glance (2026-08-07)
+## 1. Status at a glance (2026-11-08)
 
 The `/admin/*` surface — assumed "missing" in the original review — **has since been implemented and is
 live.** The admin SPA runs against the production gateway by default and renders real data on every module
@@ -20,7 +20,7 @@ except cost (blocked on a backend 500).
 
 | Module | Endpoint(s) | Live status |
 |---|---|---|
-| Auth | `/auth/login`, `/auth/me`, `/auth/refresh`, `/auth/logout` | ✅ live (BE-11 resolved 2026-08-26) |
+| Auth | `/auth/login`, `/auth/me`, `/auth/refresh`, `/auth/logout`, `/auth/google/config` | ✅ live; Google config consumed (BE-11 resolved 2026-08-26) |
 | System Health | `GET /admin/health` | ✅ live |
 | Creator Directory | `GET /admin/users` + active/roles/reset-onboarding | ✅ live |
 | Content Moderation | `GET /admin/content` + approve/takedown | ✅ live |
@@ -32,9 +32,9 @@ except cost (blocked on a backend 500).
 | Plan Limits | `GET/PUT /admin/plans` | ✅ live |
 | AI Coach | `GET/POST/PATCH /admin/coach/*` | ✅ live |
 
-Open backend items are tracked as **BE-1…BE-11** (see §2.8). **BE-11 was resolved on 2026-08-26** — live
-admin access works again and every module below was re-verified against the real gateway that day. The one
-remaining P0 is **BE-1** (cost panel 500, still failing as of 2026-08-26).
+Open backend items are tracked as **BE-1…BE-13** (see §2.8). **BE-11 was resolved on 2026-08-26** — live
+admin access works again. The latest handoff does not add a new admin route beyond the existing contract;
+the remaining gaps are backend reliability, DTO, and operational-support items listed below.
 
 ---
 
@@ -127,6 +127,7 @@ Paths are the same on local and GCP; only the host changes.
 | Method | Path | Upstream | Purpose |
 |--------|------|----------|---------|
 | GET | `/admin/health` | gateway | Aggregate service health dots |
+| GET | `/auth/google/config` | identity | Public Google Identity Services config: `{ enabled, clientId }`; consumed by the login screen |
 | GET | `/admin/users?q=&cursor=&limit=` | identity | Creator directory search |
 | GET | `/admin/users/stats?from=&to=` | identity | User signup + plan-mix aggregates (dashboard) |
 | GET | `/admin/users/:id` | identity | User detail — **sole source of `contentCount` + `emailVerified`** (the list DTO omits both); FE merges it over the selected row |
@@ -153,7 +154,7 @@ Paths are the same on local and GCP; only the host changes.
 | GET | `/admin/coach/categories/:id/questions?includeInactive=` | ai | Questions for category |
 | PUT | `/admin/coach/categories/:id/questions` | ai | **NEW 2026-08-29** — bulk upsert all Q&A (1–20) for the save form: `{ deactivateMissing, questions[] }` |
 | POST | `/admin/coach/categories/:id/questions` | ai | Add single question |
-| GET | `/admin/coach/questions/:id` | ai | **NEW 2026-08-29** — one question + parent category |
+| GET | `/admin/coach/questions/:id` | ai | One question + parent category; consumed by the coach question detail readout |
 | PATCH | `/admin/coach/questions/:id` | ai | Update / deactivate question |
 
 **Not real routes** (the FE derives these; see §2.8): `/admin/content/queue-count` (collides with
@@ -163,7 +164,11 @@ Paths are the same on local and GCP; only the host changes.
 **Content `status` values:** `draft`, `processing`, `generation_failed`, `publishing`,
 `moderation_rejected`, `published`, `deleted`. (`status=all` is **not** valid — omit the param for "all".)
 
-**Slug rule RELAXED — verified live 2026-08-29.** The server now answers
+`GET /auth/google/config` is a public configuration read only. The handoff does not define a Google
+credential exchange or callback route, so the Admin SPA does not invent one; email/password remains the
+only complete login flow until Identity documents the exchange endpoint.
+
+**Slug rule — verified in the latest handoff.** The server answers
 `slug must be alphanumeric (kebab-case, snake_case, or PascalCase)`; the old message was
 `slug must be lowercase kebab-case`. Accepted: `gaming`, `Gaming`, `digital-creator`,
 `UPPER_SNAKE`. Rejected: any value containing a space, under 2 chars, over 64 chars.
@@ -263,6 +268,7 @@ by the SPA's Zod schemas (the authoritative field-level detail is this section a
 - **jobs item:** `id, jobType, queueName, bullJobId, contentId, userId, status, promptVersion, inputPayload, resultPayload, errorMessage, correlationId, createdAt, updatedAt`
 - **explore item:** `contentId, userId, wesScore, socialRollup, hasLiveExternal, title, contentType, likeCount, commentCount, publishedAt, createdAt` (flat `{ items }` — no totals/cursor)
 - **health:** `{ status, services: [{ key, url, ok, statusCode }] }`
+- **auth/google/config:** `{ enabled, clientId }` (public; `clientId` may be null when disabled)
 - **users/stats** (live): `{ totalUsers, activeUsers, byPlan{FREE,PRO,STUDIO}, signups{ last7d, last30d, byPlanLast7d, byPlanLast30d } }` (+ `inRange`/`byPlanInRange` when `from`+`to` set). Soft-deleted users excluded; plan counts reflect current `users.plan`.
 - **costs/summary** (blocked, BE-1): the *intended* DTO is `{ totalUsd, byDay[], byProvider[{ provider, totalUsd, unitCount }], topUsers[{ userId, totalUsd }] }` — **not** the fabricated `spendTodayUsd/spend30dUsd/deltaPct/daily` the FE mocks today. The FE cost schema + UI must be rewritten to this shape once BE-1 lands.
 - **plan / coach category / coach question:** as in §2.4 / §2.5.
@@ -467,8 +473,9 @@ Desktop-first, high-density ops console — sophisticated, high-contrast, struct
 
 - **This file is the canonical admin API + spec doc.** The backend's earlier `admin-api-reference.md` and
   `admin-panel-beta-apis.md` were merged here on 2026-08-07 and removed from `NewDocs/`.
-- **Latest backend handoff reviewed:** `documentsProvided/admin-api-reference.md` on 2026-09-16. Its
-  `/admin/*` route map is identical to §2.3; this file remains the admin panel API source of truth.
+- **Latest backend handoff reviewed:** `admin-api-reference.md` on 2026-11-08. Its `/admin/*` route map is
+  identical to §2.3 and adds the public `/auth/google/config` contract; this file remains the admin panel
+  API source of truth.
 - **Process for future backend docs:** when the backend team sends a new API doc, (1) test the changes
   against the admin app, (2) merge the confirmed changes into this file, (3) note them in the changelog
   below, (4) remove the standalone doc so this stays the only source.
@@ -477,13 +484,17 @@ Desktop-first, high-density ops console — sophisticated, high-contrast, struct
   (appendix). It references this file as the contract.
 
 ### Changelog
+- **2026-11-08** — Reviewed the latest backend-provided `admin-api-reference.md`. Confirmed all documented
+  `/admin/*` routes are consumed by the SPA. Added `/auth/google/config` to the auth contract and wired its
+  schema, query, login-screen read, and MSW handler. The standalone coach question detail route is now
+  consumed by the question detail readout. The reference does not define a Google credential exchange
+  route, so full Google sign-in remains deferred until Identity documents that flow.
 - **2026-09-16** — AI Coach now consumes `GET /admin/coach/categories/:id` for fresh editor category
-  detail and `PATCH /admin/coach/questions/:id` through each question row's Active switch. The
-  standalone `GET /admin/coach/questions/:id` remains intentionally unused pending a separate UX decision.
-- **2026-09-16** — Reviewed latest backend-provided `documentsProvided/admin-api-reference.md` against this
-  file. The `/admin/*` route map, seeded admin credentials, gateway base URL, plan/coach/content/users/jobs
-  endpoints, and `users/stats` contract are aligned. Added the backend-documented
-  `VITE_API_GATEWAY_URL` alias note while preserving `VITE_API_URL` as the variable the current SPA reads.
+  detail and `PATCH /admin/coach/questions/:id` through each question row's Active switch.
+- **2026-09-16** — Reviewed the prior backend handoff against this file. The `/admin/*` route map, seeded
+  admin credentials, gateway base URL, plan/coach/content/users/jobs endpoints, and `users/stats` contract
+  were aligned. Added the backend-documented `VITE_API_GATEWAY_URL` alias note while preserving
+  `VITE_API_URL` as the variable the current SPA reads.
 - **2026-08-07** — Merged backend `admin-api-reference.md` + `admin-panel-beta-apis.md`. Updated all module
   statuses from "missing/build" to live-verified. Added §2 Admin API Reference (base URLs, auth, route map,
   plan/coach shapes, observed response shapes) and §2.8 open items BE-1…BE-9.

@@ -2,8 +2,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/api/client'
 import {
   authResponseSchema,
+  googleConfigSchema,
   userSchema,
   type AuthResponse,
+  type GoogleConfig,
   type LoginRequest,
   type User,
 } from './schemas'
@@ -11,6 +13,17 @@ import { clearSession, getRefreshToken, getToken, setSession } from '../session'
 
 export const authKeys = {
   me: ['auth', 'me'] as const,
+  googleConfig: ['auth', 'google-config'] as const,
+}
+
+/** Public Google Identity Services configuration for the sign-in surface. */
+export function useGoogleConfig() {
+  return useQuery({
+    queryKey: authKeys.googleConfig,
+    queryFn: () => api.get<GoogleConfig>('/auth/google/config', { schema: googleConfigSchema }),
+    staleTime: 10 * 60_000,
+    retry: 1,
+  })
 }
 
 /** Current admin profile — the source of truth for the auth gate. */

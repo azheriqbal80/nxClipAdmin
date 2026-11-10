@@ -3,6 +3,7 @@ import { api } from '@/api/client'
 import {
   coachCategoryListSchema,
   coachCategorySchema,
+  coachQuestionSchema,
   coachQuestionListSchema,
   planLimitsSchema,
   planListSchema,
@@ -16,6 +17,7 @@ export const configKeys = {
   plans: ['config', 'plans'] as const,
   coach: ['config', 'coach'] as const,
   coachCategory: (categoryId: string) => ['config', 'coach', 'category', categoryId] as const,
+  coachQuestion: (questionId: string) => ['config', 'coach', 'question', questionId] as const,
   questions: (categoryId: string) => ['config', 'coach', categoryId, 'questions'] as const,
 }
 
@@ -163,6 +165,17 @@ export function useCategoryQuestions(categoryId: string | null) {
   })
 }
 
+export function useCoachQuestion(questionId: string | null) {
+  return useQuery({
+    queryKey: configKeys.coachQuestion(questionId ?? 'none'),
+    enabled: !!questionId,
+    queryFn: () =>
+      api.get<CoachQuestion>(`/admin/coach/questions/${questionId}`, {
+        schema: coachQuestionSchema,
+      }),
+  })
+}
+
 /**
  * Set the picker order for every category in one call.
  *
@@ -217,6 +230,7 @@ export function useSaveQuestions() {
     },
     onSuccess: (_d, v) => {
       qc.invalidateQueries({ queryKey: configKeys.questions(v.categoryId) })
+      qc.invalidateQueries({ queryKey: ['config', 'coach', 'question'] })
       // Readiness and questionCount both move when questions change.
       qc.invalidateQueries({ queryKey: configKeys.coach })
     },
@@ -236,6 +250,7 @@ export function useToggleQuestionActive() {
     }) => api.patch<void>(`/admin/coach/questions/${questionId}`, { body: { isActive } }),
     onSuccess: (_d, v) => {
       qc.invalidateQueries({ queryKey: configKeys.questions(v.categoryId) })
+      qc.invalidateQueries({ queryKey: configKeys.coachQuestion(v.questionId) })
       qc.invalidateQueries({ queryKey: configKeys.coachCategory(v.categoryId) })
       // Readiness and active counts both move when a question is toggled.
       qc.invalidateQueries({ queryKey: configKeys.coach })

@@ -21,6 +21,11 @@ export const authResponseSchema = z.object({
   refreshToken: z.string(),
 })
 
+export const googleConfigSchema = z.object({
+  enabled: z.boolean(),
+  clientId: z.string().nullable().optional(),
+})
+
 export interface LoginRequest {
   email: string
   password: string
@@ -28,6 +33,7 @@ export interface LoginRequest {
 
 export type User = z.infer<typeof userSchema>
 export type AuthResponse = z.infer<typeof authResponseSchema>
+export type GoogleConfig = z.infer<typeof googleConfigSchema>
 
 /** Admin gate: prefer /auth/me roles over the JWT claim (which is unreliable). */
 export function isAdmin(user: Pick<User, 'roles'>) {

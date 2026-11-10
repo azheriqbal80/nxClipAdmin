@@ -323,6 +323,13 @@ export const configHandlers = [
     // questionCount is derived by `withReadiness` on read, so nothing to sync here.
     return HttpResponse.json({ ok: true }, { status: 201 })
   }),
+  http.get('*/admin/coach/questions/:id', ({ params }) => {
+    for (const list of Object.values(QUESTIONS)) {
+      const q = list.find((x) => x.id === params.id)
+      if (q) return HttpResponse.json(q)
+    }
+    return new HttpResponse(null, { status: 404 })
+  }),
   http.patch('*/admin/coach/questions/:id', async ({ params, request }) => {
     const body = (await request.json()) as { isActive?: boolean }
     for (const list of Object.values(QUESTIONS)) {

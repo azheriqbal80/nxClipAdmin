@@ -1,16 +1,22 @@
-# nxClip Admin — API Inventory & Gaps (2026‑08‑26)
+# nxClip Admin — API Inventory & Gaps (refreshed 2026‑11‑08)
 
-> **What this is:** every API the admin panel consumes, grouped by upstream service, with its
-> **live status verified on 2026‑08‑26** against the production gateway — plus what is still missing.
+> **What this is:** every API the admin panel consumes, grouped by upstream service, with the latest
+> backend handoff reviewed on **2026‑11‑08**. Live success dates below remain the dates of the last
+> production probe unless explicitly updated.
 > **Gateway:** `https://api-gateway-216098834386.us-central1.run.app` (seeded admin).
 > **Contract source of truth:** `docs/admin-panel-spec-and-api.md`.
 
-**Headline:** the admin panel consumes **30 endpoints** — all **25** documented `/admin/*` routes, the
-**4** auth routes, and the content media route. **Nothing documented is unused.**
+**Headline:** the admin panel consumes **35 endpoints** — all **29** documented `/admin/*` routes, the
+**5** auth routes (including public `/auth/google/config`), and the content media route. **Nothing
+documented in the latest reference is unused.**
 
-**Verification: 26 of 30 confirmed with a real success response, 1 more proven functional by a correct
+**Previous verification: 26 of 30 confirmed with a real success response, 1 more proven functional by a correct
 business‑rule rejection, and 3 confirmed to route + validate but not fired because they irreversibly
-change production data.** Nothing here is missing or broken — see §7.
+change production data.** No documented route is missing from the frontend; known backend failures and
+capability gaps remain listed in §6.
+
+The new `/auth/google/config` and coach question-detail consumption are frontend-wired and mock-covered;
+they have not been counted as new production probes in this historical report.
 
 ---
 
@@ -22,6 +28,7 @@ change production data.** Nothing here is missing or broken — see §7.
 | GET | `/auth/me` | Admin route guard (`roles` includes `admin`) | ✅ 200 |
 | POST | `/auth/refresh` | Retry‑once‑on‑401 + proactive refresh 5 min before expiry | ✅ 200 — new token accepted by `/auth/me` |
 | POST | `/auth/logout` | Sign out | ✅ 204 — refresh token revoked (`/auth/refresh` 200→401) |
+| GET | `/auth/google/config` | Login screen public GIS configuration read | ✅ frontend wired; production probe pending |
 
 > **BE‑11 (login token rejected by `/auth/me`) is RESOLVED** as of 2026‑08‑26 — re‑tested end to end.
 
@@ -58,9 +65,13 @@ change production data.** Nothing here is missing or broken — see §7.
 | GET | `/admin/costs/summary` | AI cost panel · Overview spend KPI | ❌ **500** |
 | GET | `/admin/coach/categories` | Coach category list | ✅ 200 (10) |
 | POST | `/admin/coach/categories` | Create category | ✅ route verified (400 validation) |
+| GET | `/admin/coach/categories/:id` | Fresh category detail + embedded questions | ✅ frontend wired; production probe pending |
 | PATCH | `/admin/coach/categories/:id` | Update / deactivate category | ✅ 200 (no‑op verified) |
+| PATCH | `/admin/coach/categories/reorder` | Bulk picker reorder | ✅ frontend wired; production probe pending |
 | GET | `/admin/coach/categories/:id/questions` | Question bank | ✅ 200 |
+| PUT | `/admin/coach/categories/:id/questions` | Bulk question save | ✅ frontend wired; production probe pending |
 | POST | `/admin/coach/categories/:id/questions` | Add question | ✅ route verified |
+| GET | `/admin/coach/questions/:id` | Standalone question detail readout | ✅ frontend wired; production probe pending |
 | PATCH | `/admin/coach/questions/:id` | Toggle question active | ✅ 200 (no‑op verified) |
 
 ## 5. Feed · Gateway · media
@@ -101,7 +112,7 @@ change production data.** Nothing here is missing or broken — see §7.
 | Constraint | Detail |
 |---|---|
 | **`limit` ≤ 100** | `/admin/content` and `/admin/jobs` reject `limit=200` with `400 "limit must not be greater than 100"`. Cost a live bug before it was caught. |
-| **Coach category validation** | `slug` must be **lowercase kebab‑case**, 2–64 chars; `label` 1–128; `progressLabel` 1–128 **required**; `openingMessage` ≥ 1. The dialog's own placeholder (`"Gaming"`) was rejected — create was impossible on production until fixed. |
+| **Coach category validation** | `slug` accepts alphanumeric, kebab-case, snake_case, and PascalCase, 2–64 chars; spaces are rejected. `label` 1–128; `progressLabel` 1–128 **required**; `openingMessage` ≥ 1. |
 | **Plan‑limit clamping** | `PUT /admin/plans/:plan` silently clamps out‑of‑range values. The ceilings are **not documented**, so the FE can only report an adjustment after the fact rather than validate before submitting. |
 
 ### 6d. Not real routes (the FE derives these)
@@ -119,7 +130,7 @@ change production data.** Nothing here is missing or broken — see §7.
 Three tiers were used, because not every endpoint can be exercised against production without
 consequences.
 
-**Tier A — real success response (25 of 30).** All read routes, plus these writes proven with a live
+**Historical Tier A — real success response (25 of 30).** All read routes, plus these writes proven with a live
 2xx and a read‑back confirming state was untouched:
 
 | Endpoint | Technique | Result |
@@ -132,7 +143,7 @@ consequences.
 | `PATCH /admin/coach/categories/:id` | re‑send current `isActive` | 200 · unchanged |
 | `PATCH /admin/coach/questions/:id` | re‑send current `isActive` | 200 · unchanged |
 
-**Tier B — route + validation proven, success path not fired (5 of 30).** These have irreversible or
+**Historical Tier B — route + validation proven, success path not fired (5 of 30).** These have irreversible or
 visible side effects on production data, so only their existence and validation were confirmed, using a
 well‑formed but nonexistent UUID (`404 "Content not found"` proves the route exists; `404 "Route not
 found"` would mean it is absent) or an empty body (which makes the server enumerate its rules — this is

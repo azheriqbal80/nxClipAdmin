@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { GraduationCap, Plus, Save, X } from 'lucide-react'
+import { GraduationCap, Info, Plus, Save, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { Panel } from '@/components/panel'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,7 @@ import { EmptyState } from '@/components/empty-state'
 import {
   useUpdateCategory,
   useCategoryQuestions,
+  useCoachQuestion,
   useAddQuestion,
   useSaveQuestions,
   useToggleQuestionActive,
@@ -59,6 +60,12 @@ const toQuestionForm = (q: CoachQuestion): QuestionForm => ({
 const parseChips = (text: string) =>
   text.split(',').map((c) => c.trim()).filter(Boolean)
 
+const fmtDateTime = (value: string) =>
+  new Date(value).toLocaleString(undefined, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  })
+
 export function CategoryEditor({
   category,
   onClose,
@@ -76,10 +83,13 @@ export function CategoryEditor({
     null,
   )
   const [qForm, setQForm] = useState<QuestionForm[]>([])
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null)
+  const questionDetail = useCoachQuestion(selectedQuestionId)
 
   useEffect(() => {
     setForm(category ? toForm(category) : null)
     setNewQ(null)
+    setSelectedQuestionId(null)
   }, [category])
 
   // Re-seed the editable rows whenever the fetched set changes — after a save,
@@ -309,6 +319,20 @@ export function CategoryEditor({
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-caption text-faint">Q{q.questionNumber}</span>
                     {!q.isActive && <Badge variant="neutral" size="sm">Inactive</Badge>}
+                    {q.id && (
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        aria-label={`Q${q.questionNumber} details`}
+                        aria-pressed={selectedQuestionId === q.id}
+                        title="Question details"
+                        onClick={() =>
+                          setSelectedQuestionId((current) => (current === q.id ? null : q.id ?? null))
+                        }
+                      >
+                        <Info />
+                      </Button>
+                    )}
                     <Switch
                       className="ml-auto"
                       aria-label={`Q${q.questionNumber} active`}
@@ -338,6 +362,24 @@ export function CategoryEditor({
                       onCheckedChange={(v) => setQ(i, { multiSelect: v })}
                     />
                   </label>
+                  {selectedQuestionId === q.id && (
+                    <div className="rounded-md border border-border bg-background/50 p-2 text-caption text-muted-foreground">
+                      {questionDetail.isLoading ? (
+                        <span>Loading question detail...</span>
+                      ) : questionDetail.isError ? (
+                        <span>Question detail unavailable.</span>
+                      ) : questionDetail.data ? (
+                        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+                          <dt className="text-faint">Question ID</dt>
+                          <dd className="truncate font-mono text-foreground">{questionDetail.data.id}</dd>
+                          <dt className="text-faint">Created</dt>
+                          <dd>{fmtDateTime(questionDetail.data.createdAt)}</dd>
+                          <dt className="text-faint">Updated</dt>
+                          <dd>{fmtDateTime(questionDetail.data.updatedAt)}</dd>
+                        </dl>
+                      ) : null}
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

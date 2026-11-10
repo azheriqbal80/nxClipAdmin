@@ -14,6 +14,9 @@ const ADMIN = {
 }
 
 export const authHandlers = [
+  http.get('*/auth/google/config', () =>
+    HttpResponse.json({ enabled: false, clientId: null }),
+  ),
   http.post('*/auth/login', async ({ request }) => {
     const body = (await request.json().catch(() => ({}))) as {
       email?: string

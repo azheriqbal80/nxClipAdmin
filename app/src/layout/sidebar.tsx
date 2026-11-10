@@ -21,10 +21,16 @@ export function Sidebar({
   return (
     <aside data-slot="app-sidebar" className="flex h-full w-full flex-col border-r border-border bg-sidebar lg:w-[var(--spacing-sidebar)]">
       <div className="flex h-(--spacing-topbar) items-center px-4">
-        <Logo />
+        <Link
+          to="/"
+          onClick={onNavigate}
+          aria-label="Go to Overview"
+          className="shell-brand-link"
+          activeOptions={{ exact: true }}
+        >
+          <Logo />
+        </Link>
       </div>
-
-      <div className="shell-workspace"><span>N</span><div><strong>nxClip workspace</strong><small>Administration</small></div></div>
 
       <nav aria-label="Main navigation" className="flex-1 space-y-6 overflow-y-auto px-4 py-2">
         {NAV.map((section) => (

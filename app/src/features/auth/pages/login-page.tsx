@@ -7,11 +7,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { isApiError } from '@/api/client'
 import { MOCKS_ON } from '@/lib/env'
-import { useLogin } from '../api/queries'
+import { useGoogleConfig, useLogin } from '../api/queries'
 import { isAuthenticated } from '../session'
 
 export function LoginPage() {
   const login = useLogin()
+  useGoogleConfig()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
