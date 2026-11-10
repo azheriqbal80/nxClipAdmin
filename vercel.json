@@ -1,0 +1,24 @@
+{
+  "framework": "vite",
+  "installCommand": "npm --prefix app ci --include=dev",
+  "buildCommand": "npm --prefix app run build",
+  "outputDirectory": "app/dist",
+  "rewrites": [
+    {
+      "source": "/auth/:path*",
+      "destination": "https://api-gateway-216098834386.us-central1.run.app/auth/:path*"
+    },
+    {
+      "source": "/admin/:path*",
+      "destination": "https://api-gateway-216098834386.us-central1.run.app/admin/:path*"
+    },
+    {
+      "source": "/content/:path*",
+      "destination": "https://api-gateway-216098834386.us-central1.run.app/content/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
